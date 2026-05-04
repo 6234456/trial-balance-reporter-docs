@@ -417,11 +417,6 @@ function renderWorkingCapital(
     .domain(buildWorkingCapitalDomain(data.map((item) => item.amount)))
     .range([height - margin.bottom, margin.top]);
   const points = data.map((item) => ({ x: x(item.label) ?? margin.left, y: y(item.amount) }));
-  const line = d3
-    .line<{ x: number; y: number }>()
-    .curve(d3.curveMonotoneX)
-    .x((point) => point.x)
-    .y((point) => point.y);
 
   drawAxes(svg, x, y, width, height, margin, options.amountScale);
 
@@ -434,7 +429,7 @@ function renderWorkingCapital(
     .attr("stroke-width", 3)
     .attr("stroke-linecap", "round")
     .attr("stroke-linejoin", "round")
-    .attr("d", line);
+    .attr("d", buildStepPath(points));
 
   svg
     .selectAll("circle.working-capital-marker")
@@ -510,6 +505,16 @@ function buildWorkingCapitalDomain(values: number[]): [number, number] {
   const upperBound = maxValue + rangeBase * 0.03;
 
   return [lowerBound, upperBound];
+}
+
+function buildStepPath(points: Array<{ x: number; y: number }>): string {
+  const firstPoint = points[0];
+
+  if (!firstPoint) {
+    return "";
+  }
+
+  return points.slice(1).reduce((path, point) => `${path}H${point.x}V${point.y}`, `M${firstPoint.x},${firstPoint.y}`);
 }
 
 function renderBars(

@@ -197,7 +197,7 @@ describe("MVP reporting pipeline", () => {
     expect(Number(assetsLabel?.getAttribute("x"))).toBeLessThan(Number(liabilitiesLabel?.getAttribute("x")));
   });
 
-  it("renders working capital as a smooth line with padded non-negative range", () => {
+  it("renders working capital as a step line with padded non-negative range", () => {
     const chart: ChartSpec = {
       chartId: "working-capital",
       chartType: "working-capital",
@@ -218,8 +218,9 @@ describe("MVP reporting pipeline", () => {
     const pathData = workingCapitalLine?.getAttribute("d") ?? "";
     const markers = [...host.querySelectorAll(".working-capital-marker")];
     expect(workingCapitalLine).toBeTruthy();
-    expect(pathData).toContain("C");
-    expect(pathData).not.toMatch(/[HV]/);
+    expect(pathData).toContain("H");
+    expect(pathData).toContain("V");
+    expect(pathData).not.toContain("C");
     expect(host.querySelector(".working-capital-step-line")).toBeNull();
     expect(host.querySelector("rect:not(.working-capital-hitbox)")).toBeNull();
     expect(markers[0]?.getAttribute("cy")).toBeCloseTo(239.7, 1);
