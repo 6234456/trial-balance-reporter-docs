@@ -65,9 +65,9 @@ export function renderRevealReportHtml(input: RenderInput): string {
     body { margin: 0; background: #f8fafc; }
     .reveal { min-height: 100vh; }
     .slides { min-height: 100vh; display: grid; }
-    .reveal section { display: none; min-height: 100vh; padding: 42px 72px; box-sizing: border-box; }
+    .reveal section { position: relative; display: none; min-height: 100vh; padding: 124px 72px 48px; box-sizing: border-box; }
     .reveal section.active { display: grid; align-content: center; gap: 20px; }
-    h1, h2 { margin: 0; line-height: 1.05; letter-spacing: 0; }
+    h1, h2 { position: absolute; top: 42px; left: 72px; right: 72px; z-index: 10; margin: 0; line-height: 1.05; letter-spacing: 0; }
     h1 { font-size: clamp(40px, 7vw, 84px); max-width: 920px; }
     h2 { font-size: clamp(28px, 4vw, 48px); }
     p { margin: 0; color: #475569; font-size: 18px; line-height: 1.7; }
