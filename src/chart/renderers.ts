@@ -403,7 +403,7 @@ function renderWorkingCapital(
   tooltip: HTMLDivElement,
 ): void {
   const data = (chart.data as Array<{ reportingDate: string; workingCapital: number }>).map((item) => ({
-    label: item.reportingDate.slice(5),
+    label: item.reportingDate,
     reportingDate: item.reportingDate,
     amount: item.workingCapital,
   }));

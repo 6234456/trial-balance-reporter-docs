@@ -227,6 +227,29 @@ describe("MVP reporting pipeline", () => {
     expect(host.querySelectorAll(".working-capital-hitbox[data-tooltip]")).toHaveLength(3);
   });
 
+  it("keeps demo year-end working capital points on distinct x coordinates", () => {
+    const parsed = loadFixture("sample-valid");
+    const statement = buildStatementModel(parsed);
+    const chartData = buildChartDataModel(statement, parsed.diagnostics);
+    const chart = chartData.charts.find((item) => item.chartId === "working-capital");
+    const host = document.createElement("div");
+    Object.defineProperty(host, "clientWidth", { configurable: true, value: 720 });
+
+    if (!chart) {
+      throw new Error("working-capital chart not found");
+    }
+
+    renderChart(host, chart, { amountScale: "thousand", plViewMode: "ytd" });
+
+    const markerXPositions = [...host.querySelectorAll(".working-capital-marker")].map((marker) => marker.getAttribute("cx"));
+    const tickLabels = [...host.querySelectorAll(".x-axis .tick text")].map((label) => label.textContent);
+
+    expect(markerXPositions).toHaveLength(statement.periods.length);
+    expect(new Set(markerXPositions).size).toBe(statement.periods.length);
+    expect(tickLabels).toContain("2024-12-31");
+    expect(tickLabels).toContain("2025-12-31");
+  });
+
   it("renders KPI cards with icons and prior-period movement", () => {
     const parsed = loadFixture("sample-valid");
     const statement = buildStatementModel(parsed);
