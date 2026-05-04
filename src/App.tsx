@@ -137,7 +137,7 @@ export function App() {
   return (
     <main className="min-h-screen bg-slate-50 text-slate-950">
       <div className="mx-auto flex min-h-screen w-full max-w-7xl flex-col px-5 py-5 sm:px-8 lg:px-10">
-        <header className="flex flex-col gap-4 border-b border-slate-200 pb-5 sm:flex-row sm:items-center sm:justify-between">
+        <header className="border-b border-slate-200 pb-5">
           <div>
             <p className="text-sm font-semibold uppercase tracking-wide text-blue-700">
               Browser-only financial reporting
@@ -145,14 +145,6 @@ export function App() {
             <h1 className="mt-2 text-3xl font-semibold tracking-normal text-slate-950 sm:text-4xl">
               trial-balance-reporter
             </h1>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            <a className="secondary-button" href="./examples/sample-valid.xlsx" download>
-              Download Demo Spreadsheet
-            </a>
-            <a className="secondary-button" href="./examples/sample-with-warnings.xlsx" download>
-              Download Warning Spreadsheet
-            </a>
           </div>
         </header>
 

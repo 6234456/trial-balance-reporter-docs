@@ -30,6 +30,8 @@ describe("App", () => {
     expect(html).toContain("Upload Excel");
     expect(html).toContain("Download Demo Spreadsheet");
     expect(html).toContain("Download Warning Spreadsheet");
+    expect(html.match(/Download Demo Spreadsheet/g)).toHaveLength(1);
+    expect(html.match(/Download Warning Spreadsheet/g)).toHaveLength(1);
     expect(html).toContain("Upload");
     expect(html).toContain("Validate");
     expect(html).toContain("Configure");
