@@ -50,7 +50,7 @@ select {
   }
 
   .chart-tooltip {
-    @apply pointer-events-none absolute z-30 max-w-64 rounded-md border border-slate-200 bg-white px-3 py-2 text-xs font-medium leading-5 text-slate-800 shadow-lg;
+    @apply pointer-events-none absolute z-30 max-w-64 whitespace-pre-line rounded-md border border-slate-200 bg-white px-3 py-2 text-xs font-medium leading-5 text-slate-800 shadow-lg;
   }
 
   .chart-tooltip[hidden] {

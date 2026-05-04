@@ -136,6 +136,57 @@ describe("MVP reporting pipeline", () => {
     }
   });
 
+  it("renders the P&L trend with smooth lines and merged period tooltips", () => {
+    const parsed = loadFixture("sample-valid");
+    const statement = buildStatementModel(parsed);
+    const chartData = buildChartDataModel(statement, parsed.diagnostics);
+    const chart = chartData.charts.find((item) => item.chartId === "pl-trend");
+    const host = document.createElement("div");
+    Object.defineProperty(host, "clientWidth", { configurable: true, value: 720 });
+
+    if (!chart) {
+      throw new Error("pl-trend chart not found");
+    }
+
+    renderChart(host, chart, { amountScale: "thousand", plViewMode: "ytd" });
+
+    const smoothLines = host.querySelectorAll(".trend-line-path");
+    const baselines = host.querySelectorAll(".trend-baseline");
+    const mergedTooltips = host.querySelectorAll(".trend-hitbox[data-tooltip]");
+
+    expect(smoothLines).toHaveLength(3);
+    smoothLines.forEach((line) => {
+      expect(line.getAttribute("d")).toContain("C");
+    });
+    expect(baselines).toHaveLength(statement.periods.length);
+    expect(mergedTooltips).toHaveLength(statement.periods.length);
+    expect(mergedTooltips[0]?.getAttribute("data-tooltip")).toContain("Revenue");
+    expect(mergedTooltips[0]?.getAttribute("data-tooltip")).toContain("Gross Profit");
+    expect(mergedTooltips[0]?.getAttribute("data-tooltip")).toContain("Net Income");
+  });
+
+  it("renders working capital as a step line instead of bars", () => {
+    const parsed = loadFixture("sample-valid");
+    const statement = buildStatementModel(parsed);
+    const chartData = buildChartDataModel(statement, parsed.diagnostics);
+    const chart = chartData.charts.find((item) => item.chartId === "working-capital");
+    const host = document.createElement("div");
+    Object.defineProperty(host, "clientWidth", { configurable: true, value: 720 });
+
+    if (!chart) {
+      throw new Error("working-capital chart not found");
+    }
+
+    renderChart(host, chart, { amountScale: "thousand", plViewMode: "ytd" });
+
+    const stepLine = host.querySelector(".working-capital-step-line");
+    expect(stepLine).toBeTruthy();
+    expect(stepLine?.getAttribute("d")).toContain("H");
+    expect(stepLine?.getAttribute("d")).toContain("V");
+    expect(host.querySelector("rect:not(.working-capital-hitbox)")).toBeNull();
+    expect(host.querySelectorAll(".working-capital-hitbox[data-tooltip]")).toHaveLength(statement.periods.length);
+  });
+
   it("renders KPI cards with icons and prior-period movement", () => {
     const parsed = loadFixture("sample-valid");
     const statement = buildStatementModel(parsed);

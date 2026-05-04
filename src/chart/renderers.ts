@@ -128,28 +128,46 @@ function renderTrend(
   options: ChartRenderOptions,
   tooltip: HTMLDivElement,
 ): void {
-  const data = chart.data as Array<{
+  type TrendDatum = {
     reportingDate: string;
     series: string;
     ytdAmount: number;
     periodActivityAmount: number;
-  }>;
+  };
+  const data = chart.data as TrendDatum[];
   const key = options.plViewMode === "period_activity" ? "periodActivityAmount" : "ytdAmount";
   const margin = { top: 20, right: 28, bottom: 44, left: 72 };
   const dates = [...new Set(data.map((item) => item.reportingDate))];
   const series = [...new Set(data.map((item) => item.series))];
   const x = d3.scalePoint(dates, [margin.left, width - margin.right]);
+  const extent = d3.extent(data, (item) => item[key]);
   const y = d3
     .scaleLinear()
-    .domain([0, d3.max(data, (item) => item[key]) ?? 0])
+    .domain([Math.min(0, extent[0] ?? 0), Math.max(0, extent[1] ?? 0)])
     .nice()
     .range([height - margin.bottom, margin.top]);
   const line = d3
-    .line<(typeof data)[number]>()
+    .line<TrendDatum>()
+    .curve(d3.curveMonotoneX)
     .x((item) => x(item.reportingDate) ?? 0)
     .y((item) => y(item[key]));
 
   drawAxes(svg, x, y, width, height, margin, options.amountScale);
+
+  svg
+    .append("g")
+    .attr("class", "trend-baselines")
+    .selectAll("line")
+    .data(dates)
+    .join("line")
+    .attr("class", "trend-baseline")
+    .attr("x1", (date) => x(date) ?? 0)
+    .attr("x2", (date) => x(date) ?? 0)
+    .attr("y1", margin.top)
+    .attr("y2", height - margin.bottom)
+    .attr("stroke", "#cbd5e1")
+    .attr("stroke-width", 1)
+    .attr("opacity", 0.75);
 
   series.forEach((seriesName, seriesIndex) => {
     const seriesData = data.filter((item) => item.series === seriesName);
@@ -158,9 +176,12 @@ function renderTrend(
     svg
       .append("path")
       .datum(seriesData)
+      .attr("class", "trend-line-path")
       .attr("fill", "none")
       .attr("stroke", color)
       .attr("stroke-width", 3)
+      .attr("stroke-linecap", "round")
+      .attr("stroke-linejoin", "round")
       .attr("d", line);
 
     svg
@@ -173,13 +194,28 @@ function renderTrend(
       .attr("r", 4)
       .attr("fill", color)
       .attr("stroke", "#ffffff")
-      .attr("stroke-width", 1.5)
-      .each(function addTooltip(item) {
-        if (this instanceof Element) {
-          attachTooltip(this, tooltip, `${item.series} ${item.reportingDate}: ${formatAmount(item[key], options.amountScale)}`);
-        }
-      });
+      .attr("stroke-width", 1.5);
   });
+
+  const hitboxWidth = calculatePointHitboxWidth(dates.map((date) => x(date) ?? 0), margin.left, width - margin.right);
+  svg
+    .append("g")
+    .attr("class", "trend-hitboxes")
+    .selectAll("rect")
+    .data(dates)
+    .join("rect")
+    .attr("class", "trend-hitbox")
+    .attr("x", (date) => centeredHitboxX(x(date) ?? margin.left, hitboxWidth, margin.left, width - margin.right))
+    .attr("y", margin.top)
+    .attr("width", hitboxWidth)
+    .attr("height", height - margin.top - margin.bottom)
+    .attr("fill", "#ffffff")
+    .attr("opacity", 0.001)
+    .each(function addTooltip(date) {
+      if (this instanceof Element) {
+        attachTooltip(this, tooltip, buildTrendTooltip(date, series, data, key, options.amountScale));
+      }
+    });
 }
 
 function renderWaterfall(
@@ -321,15 +357,111 @@ function renderWorkingCapital(
   options: ChartRenderOptions,
   tooltip: HTMLDivElement,
 ): void {
-  const data = chart.data as Array<{ reportingDate: string; workingCapital: number }>;
-  renderBars(
-    svg,
-    width,
-    height,
-    data.map((item) => ({ label: item.reportingDate.slice(5), amount: item.workingCapital })),
-    options.amountScale,
-    tooltip,
-  );
+  const data = (chart.data as Array<{ reportingDate: string; workingCapital: number }>).map((item) => ({
+    label: item.reportingDate.slice(5),
+    reportingDate: item.reportingDate,
+    amount: item.workingCapital,
+  }));
+  const margin = { top: 20, right: 24, bottom: 56, left: 72 };
+  const x = d3
+    .scalePoint()
+    .domain(data.map((item) => item.label))
+    .range([margin.left, width - margin.right]);
+  const extent = d3.extent(data, (item) => item.amount);
+  const y = d3
+    .scaleLinear()
+    .domain([Math.min(0, extent[0] ?? 0), Math.max(0, extent[1] ?? 0)])
+    .nice()
+    .range([height - margin.bottom, margin.top]);
+  const points = data.map((item) => ({ x: x(item.label) ?? margin.left, y: y(item.amount) }));
+
+  drawAxes(svg, x, y, width, height, margin, options.amountScale);
+
+  svg
+    .append("path")
+    .datum(points)
+    .attr("class", "working-capital-step-line")
+    .attr("fill", "none")
+    .attr("stroke", fallbackColor)
+    .attr("stroke-width", 3)
+    .attr("stroke-linecap", "round")
+    .attr("stroke-linejoin", "round")
+    .attr("d", buildStepPath(points));
+
+  svg
+    .selectAll("circle.working-capital-marker")
+    .data(data)
+    .join("circle")
+    .attr("class", "working-capital-marker")
+    .attr("cx", (item) => x(item.label) ?? margin.left)
+    .attr("cy", (item) => y(item.amount))
+    .attr("r", 4)
+    .attr("fill", fallbackColor)
+    .attr("stroke", "#ffffff")
+    .attr("stroke-width", 1.5);
+
+  const hitboxWidth = calculatePointHitboxWidth(points.map((point) => point.x), margin.left, width - margin.right);
+  svg
+    .append("g")
+    .attr("class", "working-capital-hitboxes")
+    .selectAll("rect")
+    .data(data)
+    .join("rect")
+    .attr("class", "working-capital-hitbox")
+    .attr("x", (item) => centeredHitboxX(x(item.label) ?? margin.left, hitboxWidth, margin.left, width - margin.right))
+    .attr("y", margin.top)
+    .attr("width", hitboxWidth)
+    .attr("height", height - margin.top - margin.bottom)
+    .attr("fill", "#ffffff")
+    .attr("opacity", 0.001)
+    .each(function addTooltip(item) {
+      if (this instanceof Element) {
+        attachTooltip(this, tooltip, `${item.reportingDate}: ${formatAmount(item.amount, options.amountScale)}`);
+      }
+    });
+}
+
+function buildTrendTooltip(
+  date: string,
+  seriesNames: string[],
+  data: Array<{ reportingDate: string; series: string; ytdAmount: number; periodActivityAmount: number }>,
+  key: "ytdAmount" | "periodActivityAmount",
+  amountScale: AmountScale,
+): string {
+  const rows = seriesNames.map((seriesName) => {
+    const item = data.find((candidate) => candidate.reportingDate === date && candidate.series === seriesName);
+    return `${seriesName}: ${formatAmount(item?.[key] ?? 0, amountScale)}`;
+  });
+
+  return [date, ...rows].join("\n");
+}
+
+function calculatePointHitboxWidth(points: number[], minX: number, maxX: number): number {
+  if (points.length <= 1) {
+    return Math.max(48, maxX - minX);
+  }
+
+  const distances = points.slice(1).map((point, index) => Math.abs(point - (points[index] ?? point)));
+  return Math.max(48, d3.min(distances) ?? 48);
+}
+
+function centeredHitboxX(center: number, width: number, minX: number, maxX: number): number {
+  return Math.max(minX, Math.min(center - width / 2, maxX - width));
+}
+
+function buildStepPath(points: Array<{ x: number; y: number }>): string {
+  if (points.length === 0) {
+    return "";
+  }
+
+  const firstPoint = points[0];
+
+  if (!firstPoint) {
+    return "";
+  }
+
+  const remainingPoints = points.slice(1);
+  return remainingPoints.reduce((path, point) => `${path}H${point.x}V${point.y}`, `M${firstPoint.x},${firstPoint.y}`);
 }
 
 function renderBars(
