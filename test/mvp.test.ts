@@ -8,7 +8,7 @@ import { renderChart } from "../src/chart/renderers";
 import { buildStatementModel } from "../src/domain/statement";
 import { parseCsvWorkbook } from "../src/excel/csvWorkbook";
 import { renderRevealReportHtml } from "../src/reveal/renderRevealReportHtml";
-import type { ReportConfig } from "../src/types";
+import type { ChartSpec, ReportConfig } from "../src/types";
 
 const root = resolve(import.meta.dirname, "..");
 
@@ -152,15 +152,52 @@ describe("MVP reporting pipeline", () => {
     const cards = host.querySelectorAll(".kpi-card");
     expect(cards).toHaveLength(5);
     expect(host.querySelectorAll(".kpi-icon")).toHaveLength(5);
-    expect(host.textContent).toContain("vs prior period / 较上期");
+    expect(host.textContent).not.toContain("vs prior period / 较上期");
+    expect(cards[0]?.parentElement?.className).toContain("minmax(210px,1fr)");
 
     const revenueCard = cards[0];
+    const revenueChange = revenueCard?.querySelector(".kpi-change");
+    const revenueAbsolute = revenueCard?.querySelector(".kpi-change-absolute");
+    const revenuePercent = revenueCard?.querySelector(".kpi-change-percent");
     expect(revenueCard?.className).toContain("rounded-xl");
     expect(revenueCard?.className).toContain("shadow-md");
+    expect(revenueCard?.className).toContain("min-w-0");
+    expect(revenueChange?.className).toContain("text-blue-700");
+    expect(revenueChange?.className).not.toContain("bg-blue-50");
+    expect(revenueAbsolute?.className).toContain("text-xl");
+    expect(revenuePercent?.className).toContain("text-xs");
     expect(host.innerHTML).not.toMatch(/teal|emerald|amber|rose|#0f766e|#6d5bd0|#f59e0b|#e11d48|#14b8a6/);
     expect(revenueCard?.getAttribute("data-change-absolute")).toBe("+1,150k");
-    expect(revenueCard?.getAttribute("data-change-percent")).toBe("+39.0%");
+    expect(revenueCard?.getAttribute("data-change-percent")).toBe("39.0%");
     expect(revenueCard?.textContent).toContain("+1,150k");
-    expect(revenueCard?.textContent).toContain("+39.0%");
+    expect(revenueCard?.textContent).toContain("39.0%");
+    expect(revenueCard?.textContent).not.toContain("+39.0%");
+  });
+
+  it("uses gray compact movement styling for declining KPIs", () => {
+    const chart: ChartSpec = {
+      chartId: "kpi-summary",
+      chartType: "kpi-cards",
+      title: { en: "Executive KPIs", zh: "核心财务指标" },
+      sourceLineIds: [],
+      data: {
+        "2025-03-31": { revenue: 1000, grossProfit: 800, netIncome: 500, totalAssets: 3000, cash: 600 },
+        "2025-06-30": { revenue: 750, grossProfit: 700, netIncome: 450, totalAssets: 2900, cash: 500 },
+      },
+    };
+    const host = document.createElement("div");
+
+    renderChart(host, chart, { amountScale: "raw", plViewMode: "ytd" });
+
+    const revenueCard = host.querySelector(".kpi-card");
+    const revenueChange = revenueCard?.querySelector(".kpi-change");
+    const revenuePercent = revenueCard?.querySelector(".kpi-change-percent");
+
+    expect(revenueChange?.className).toContain("text-slate-700");
+    expect(revenueChange?.className).not.toContain("text-blue-700");
+    expect(revenueCard?.getAttribute("data-change-absolute")).toBe("-250");
+    expect(revenueCard?.getAttribute("data-change-percent")).toBe("25.0%");
+    expect(revenuePercent?.textContent).toBe("25.0%");
+    expect(revenuePercent?.textContent).not.toContain("-");
   });
 });
