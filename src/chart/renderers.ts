@@ -282,7 +282,7 @@ function renderPairedStackedBars(
   });
 
   drawAxes(svg, x, y, width, height, margin, options.amountScale);
-  svg.select(".y-axis").selectAll(".tick text").remove();
+  svg.select(".y-axis").selectAll(".tick").remove();
 
   const groupLayer = svg.append("g");
 

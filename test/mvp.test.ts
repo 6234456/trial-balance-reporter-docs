@@ -186,7 +186,7 @@ describe("MVP reporting pipeline", () => {
 
     expect(yAxis).toBeTruthy();
     expect(yAxis?.getAttribute("transform")).toBe("translate(72,0)");
-    expect(yAxis?.querySelectorAll(".tick text").length).toBe(0);
+    expect(yAxis?.querySelectorAll(".tick").length).toBe(0);
     expect(labels).toHaveLength(2);
     expect(assetsLabel?.textContent).toContain("Property, plant and equipment");
     expect(assetsLabel?.getAttribute("data-horizontal-bias")).toBe("left");
