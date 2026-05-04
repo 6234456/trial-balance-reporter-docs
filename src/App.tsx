@@ -139,7 +139,7 @@ export function App() {
       <div className="mx-auto flex min-h-screen w-full max-w-7xl flex-col px-5 py-5 sm:px-8 lg:px-10">
         <header className="flex flex-col gap-4 border-b border-slate-200 pb-5 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-wide text-teal-700">
+            <p className="text-sm font-semibold uppercase tracking-wide text-blue-700">
               Browser-only financial reporting
             </p>
             <h1 className="mt-2 text-3xl font-semibold tracking-normal text-slate-950 sm:text-4xl">
@@ -205,7 +205,7 @@ function Workflow({ activeStep }: { activeStep: number }) {
             <li className="flex items-center gap-3" key={step}>
               <span
                 className={`flex size-8 shrink-0 items-center justify-center rounded-full text-sm font-semibold ${
-                  isActive ? "bg-teal-700 text-white" : "bg-slate-200 text-slate-600"
+                  isActive ? "bg-blue-700 text-white" : "bg-slate-200 text-slate-600"
                 }`}
               >
                 {stepNumber}
@@ -359,7 +359,7 @@ function StatusBanner({ pipeline }: { pipeline: PipelineState }) {
     pipeline.status === "error"
       ? "border-red-200 bg-red-50 text-red-950"
       : pipeline.status === "ready"
-        ? "border-teal-200 bg-teal-50 text-teal-950"
+        ? "border-blue-200 bg-blue-50 text-blue-950"
         : "border-slate-200 bg-white text-slate-950";
 
   return (
@@ -391,7 +391,7 @@ function DiagnosticsPanel({ diagnostics }: { diagnostics: DiagnosticReport }) {
         <h2 className="panel-title">Validate</h2>
         <div className="grid grid-cols-3 gap-2 text-center text-sm">
           <Metric label="Blocking" value={diagnostics.summary.blocking} tone="text-red-700" />
-          <Metric label="Warnings" value={diagnostics.summary.warning} tone="text-amber-700" />
+          <Metric label="Warnings" value={diagnostics.summary.warning} tone="text-slate-700" />
           <Metric label="Info" value={diagnostics.summary.info} tone="text-slate-700" />
         </div>
       </div>
@@ -487,7 +487,7 @@ function StatementTable({
 }) {
   return (
     <div className="statement-table-card overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
-      <div className="flex flex-col gap-1 border-b border-slate-200 bg-gradient-to-r from-white to-teal-50 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-1 border-b border-slate-200 bg-gradient-to-r from-white to-blue-50 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
         <h3 className="text-base font-semibold text-slate-950">{title}</h3>
         <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">{periods.length} periods</span>
       </div>
@@ -587,7 +587,7 @@ function ChartPanel({
   }, [amountScale, chart, plViewMode]);
 
   return (
-    <div className="chart-card rounded-lg border border-white/70 bg-white p-4 shadow-sm ring-1 ring-emerald-900/10">
+    <div className="chart-card rounded-lg border border-white/70 bg-white p-4 shadow-sm ring-1 ring-slate-900/10">
       <h3 className="text-base font-semibold text-slate-950">
         {chart.title.en} <span className="text-slate-400">{chart.title.zh}</span>
       </h3>
@@ -619,7 +619,7 @@ function ExportPanel({
         </button>
       </div>
       {disabled ? <p className="mt-3 text-sm text-red-700">Blocking diagnostics must be fixed before export.</p> : null}
-      {exportMessage ? <p className="mt-3 text-sm text-teal-700">{exportMessage}</p> : null}
+      {exportMessage ? <p className="mt-3 text-sm text-blue-700">{exportMessage}</p> : null}
     </section>
   );
 }

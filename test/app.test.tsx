@@ -35,6 +35,7 @@ describe("App", () => {
     expect(html).toContain("Configure");
     expect(html).toContain("Preview");
     expect(html).toContain("Export");
+    expect(html).not.toMatch(/teal|emerald|amber|rose/);
   });
 
   it("loads the bundled demo workbook into the MVP workspace", async () => {

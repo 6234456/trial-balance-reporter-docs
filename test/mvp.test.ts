@@ -157,6 +157,7 @@ describe("MVP reporting pipeline", () => {
     const revenueCard = cards[0];
     expect(revenueCard?.className).toContain("rounded-xl");
     expect(revenueCard?.className).toContain("shadow-md");
+    expect(host.innerHTML).not.toMatch(/teal|emerald|amber|rose|#0f766e|#6d5bd0|#f59e0b|#e11d48|#14b8a6/);
     expect(revenueCard?.getAttribute("data-change-absolute")).toBe("+1,150k");
     expect(revenueCard?.getAttribute("data-change-percent")).toBe("+39.0%");
     expect(revenueCard?.textContent).toContain("+1,150k");

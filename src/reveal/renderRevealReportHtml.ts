@@ -105,7 +105,7 @@ export function renderRevealReportHtml(input: RenderInput): string {
         row.style.gap = "12px";
         row.style.alignItems = "center";
         row.style.margin = "12px 0";
-        row.innerHTML = "<strong>" + item.reportingDate + "</strong><div style='height:18px;background:#e2e8f0;border-radius:4px;overflow:hidden'><div style='width:" + Math.max(2, item.ytdAmount / max * 100) + "%;height:100%;background:#0f766e'></div></div><span>" + formatNumber(item.ytdAmount, scale) + "</span>";
+        row.innerHTML = "<strong>" + item.reportingDate + "</strong><div style='height:18px;background:#e2e8f0;border-radius:4px;overflow:hidden'><div style='width:" + Math.max(2, item.ytdAmount / max * 100) + "%;height:100%;background:#2563eb'></div></div><span>" + formatNumber(item.ytdAmount, scale) + "</span>";
         host.appendChild(row);
       });
     }

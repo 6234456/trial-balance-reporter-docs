@@ -7,7 +7,9 @@ export type ChartRenderOptions = {
   plViewMode: "ytd" | "period_activity";
 };
 
-const palette = ["#0f766e", "#6d5bd0", "#f59e0b", "#e11d48", "#2563eb", "#14b8a6"];
+const fallbackColor = "#2563eb";
+const palette = [fallbackColor, "#0f172a", "#1e40af", "#334155", "#64748b", "#94a3b8"];
+const negativeColor = "#334155";
 
 export function renderChart(container: HTMLElement, chart: ChartSpec, options: ChartRenderOptions): void {
   container.replaceChildren();
@@ -69,12 +71,12 @@ function renderKpis(container: HTMLElement, chart: ChartSpec, options: ChartRend
     const previousValue = previous[item.key] ?? 0;
     const absoluteChange = value - previousValue;
     const percentChange = previousValue === 0 ? null : absoluteChange / Math.abs(previousValue);
-    const movementTone = absoluteChange >= 0 ? "text-teal-700 bg-teal-50" : "text-rose-700 bg-rose-50";
+    const movementTone = absoluteChange >= 0 ? "text-blue-700 bg-blue-50" : "text-slate-700 bg-slate-100";
     const absoluteChangeText = formatSignedAmount(absoluteChange, options.amountScale);
     const percentChangeText = formatPercent(percentChange);
     const card = document.createElement("div");
     card.className =
-      "kpi-card rounded-xl border border-slate-200 bg-white p-4 shadow-md outline-none ring-1 ring-slate-100 transition focus:ring-2 focus:ring-teal-500";
+      "kpi-card rounded-xl border border-slate-200 bg-white p-4 shadow-md outline-none ring-1 ring-slate-100 transition focus:ring-2 focus:ring-blue-500";
     card.setAttribute("data-change-absolute", absoluteChangeText);
     card.setAttribute("data-change-percent", percentChangeText);
     attachTooltip(
@@ -112,7 +114,7 @@ function renderDiagnostics(container: HTMLElement, chart: ChartSpec, tooltip: HT
 
   for (const key of ["blocking", "warning", "info"]) {
     const card = document.createElement("div");
-    card.className = "rounded-md border border-slate-200 bg-white p-4 shadow-sm outline-none focus:ring-2 focus:ring-teal-500";
+    card.className = "rounded-md border border-slate-200 bg-white p-4 shadow-sm outline-none focus:ring-2 focus:ring-blue-500";
     attachTooltip(card, tooltip, `${key}: ${data[key] ?? 0}`);
     card.innerHTML = `<div class="text-xs font-semibold uppercase tracking-wide text-slate-500">${key}</div><div class="mt-2 text-3xl font-semibold text-slate-950">${data[key] ?? 0}</div>`;
     wrapper.append(card);
@@ -154,7 +156,7 @@ function renderTrend(
 
   series.forEach((seriesName, seriesIndex) => {
     const seriesData = data.filter((item) => item.series === seriesName);
-    const color = palette[seriesIndex % palette.length] ?? "#0f766e";
+    const color = palette[seriesIndex % palette.length] ?? fallbackColor;
 
     svg
       .append("path")
@@ -243,7 +245,7 @@ function renderPairedStackedBars(
   const colorByLineId = new Map<string, string>();
 
   chart.sourceLineIds.forEach((lineId, index) => {
-    colorByLineId.set(lineId, palette[index % palette.length] ?? "#0f766e");
+    colorByLineId.set(lineId, palette[index % palette.length] ?? fallbackColor);
   });
 
   drawAxes(svg, x, y, width, height, margin, options.amountScale);
@@ -266,7 +268,7 @@ function renderPairedStackedBars(
         .attr("width", x.bandwidth())
         .attr("height", Math.max(1, y(start) - y(end)))
         .attr("rx", 4)
-        .attr("fill", colorByLineId.get(segment.lineId) ?? "#0f766e")
+        .attr("fill", colorByLineId.get(segment.lineId) ?? fallbackColor)
         .attr("stroke", "#ffffff")
         .attr("stroke-width", 1)
         .each(function addTooltip() {
@@ -303,7 +305,7 @@ function renderPairedStackedBars(
       .attr("width", 10)
       .attr("height", 10)
       .attr("rx", 2)
-      .attr("fill", colorByLineId.get(lineId) ?? "#0f766e");
+      .attr("fill", colorByLineId.get(lineId) ?? fallbackColor);
     legend
       .append("text")
       .attr("x", 16)
@@ -365,7 +367,7 @@ function renderBars(
     .attr("width", x.bandwidth())
     .attr("height", (item) => Math.abs(y(item.amount) - y(0)))
     .attr("rx", 4)
-    .attr("fill", (item, index) => (item.amount < 0 ? "#e11d48" : (palette[index % palette.length] ?? "#0f766e")))
+    .attr("fill", (item, index) => (item.amount < 0 ? negativeColor : (palette[index % palette.length] ?? fallbackColor)))
     .each(function addTooltip(item) {
       if (this instanceof Element) {
         attachTooltip(this, tooltip, `${item.label}: ${formatAmount(item.amount, amountScale)}`);
