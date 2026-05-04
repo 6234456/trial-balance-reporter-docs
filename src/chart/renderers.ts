@@ -64,7 +64,7 @@ function renderKpis(container: HTMLElement, chart: ChartSpec, options: ChartRend
   ] as const;
 
   const wrapper = document.createElement("div");
-  wrapper.className = "grid gap-3 [grid-template-columns:repeat(auto-fit,minmax(210px,1fr))]";
+  wrapper.className = "grid gap-2 [grid-template-columns:repeat(auto-fit,minmax(160px,1fr))]";
 
   for (const item of items) {
     const value = latest[item.key] ?? 0;
@@ -76,7 +76,7 @@ function renderKpis(container: HTMLElement, chart: ChartSpec, options: ChartRend
     const percentChangeText = formatPercentMagnitude(percentChange);
     const card = document.createElement("div");
     card.className =
-      "kpi-card min-w-0 rounded-xl border border-slate-200 bg-white p-4 shadow-md outline-none ring-1 ring-slate-100 transition focus:ring-2 focus:ring-blue-500";
+      "kpi-card min-w-0 rounded-xl border border-slate-200 bg-white p-3 shadow-md outline-none ring-1 ring-slate-100 transition focus:ring-2 focus:ring-blue-500";
     card.setAttribute("data-change-absolute", absoluteChangeText);
     card.setAttribute("data-change-percent", percentChangeText);
     attachTooltip(
@@ -88,13 +88,13 @@ function renderKpis(container: HTMLElement, chart: ChartSpec, options: ChartRend
       <div class="flex min-w-0 items-start justify-between gap-2">
         <div class="min-w-0">
           <div class="truncate text-xs font-semibold uppercase tracking-wide text-slate-500">${item.label}</div>
-          <div class="mt-2 truncate text-2xl font-semibold text-slate-950">${formatAmount(value, options.amountScale)}</div>
+          <div class="mt-1 truncate text-2xl font-semibold text-slate-950">${formatAmount(value, options.amountScale)}</div>
         </div>
-        <div class="kpi-icon flex size-9 shrink-0 items-center justify-center rounded-lg bg-slate-900 text-white shadow-sm" aria-hidden="true">
+        <div class="kpi-icon flex size-8 shrink-0 items-center justify-center rounded-lg bg-slate-900 text-white shadow-sm" aria-hidden="true">
           ${renderKpiIcon(item.icon)}
         </div>
       </div>
-      <div class="kpi-change mt-4 flex min-w-0 items-end justify-between gap-2 border-t border-slate-100 pt-3 ${movementTone}">
+      <div class="kpi-change mt-3 flex min-w-0 items-end justify-between gap-2 border-t border-slate-100 pt-2 ${movementTone}">
         <span class="kpi-change-absolute min-w-0 truncate text-xl font-semibold tabular-nums">${absoluteChangeText}</span>
         <span class="kpi-change-percent shrink-0 text-xs font-semibold tabular-nums">${percentChangeText}</span>
       </div>`;

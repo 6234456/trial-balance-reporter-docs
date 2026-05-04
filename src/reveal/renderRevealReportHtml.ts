@@ -83,10 +83,21 @@ export function renderRevealReportHtml(input: RenderInput): string {
     .axis-line { stroke: #cbd5e1; stroke-width: 1; }
     .tick-label { fill: #64748b; font-size: 11px; }
     .legend-label { fill: #475569; font-size: 12px; }
-    .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; }
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; }
     .card { background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06); }
     .label { text-transform: uppercase; font-size: 12px; font-weight: 700; color: #64748b; }
     .value { margin-top: 8px; font-size: 28px; font-weight: 700; }
+    .chart-frame-kpi-cards { min-height: 300px; }
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; align-items: stretch; }
+    .kpi-card { min-width: 0; border: 1px solid #e2e8f0; border-radius: 12px; background: white; padding: 12px; box-shadow: 0 10px 22px rgba(15, 23, 42, 0.08); }
+    .kpi-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; min-width: 0; }
+    .kpi-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-transform: uppercase; font-size: 11px; font-weight: 700; color: #64748b; }
+    .kpi-value { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-top: 4px; color: #020617; font-size: 28px; font-weight: 700; }
+    .kpi-icon { display: flex; width: 32px; height: 32px; flex: 0 0 auto; align-items: center; justify-content: center; border-radius: 8px; background: #0f172a; color: white; box-shadow: 0 2px 6px rgba(15, 23, 42, 0.16); }
+    .kpi-icon svg { width: 18px; height: 18px; }
+    .kpi-change { display: flex; min-width: 0; align-items: flex-end; justify-content: space-between; gap: 8px; margin-top: 12px; border-top: 1px solid #f1f5f9; padding-top: 8px; font-variant-numeric: tabular-nums; }
+    .kpi-change-absolute { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 20px; font-weight: 700; }
+    .kpi-change-percent { flex: 0 0 auto; font-size: 12px; font-weight: 700; }
     .controls { display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid #e2e8f0; padding: 14px 18px; background: white; }
     button { min-height: 40px; border: 1px solid #cbd5e1; border-radius: 6px; background: white; padding: 0 12px; font: inherit; }
     @media print { .controls { display: none; } .reveal section { display: block; break-after: page; min-height: 100vh; } }
@@ -171,7 +182,7 @@ function renderStatementSlide(
 function renderChartSlide(chart: ChartSpec, options: ChartRenderOptions): string {
   return `<section data-slide-id="chart-${escapeHtml(chart.chartId)}">
         <h2>${escapeHtml(chart.title.en)} <span style="color:#94a3b8">${escapeHtml(chart.title.zh)}</span></h2>
-        <div class="chart-frame" data-chart-id="${escapeHtml(chart.chartId)}">
+        <div class="chart-frame chart-frame-${escapeHtml(chart.chartType)}" data-chart-id="${escapeHtml(chart.chartId)}">
           ${renderChartFigure(chart, options)}
         </div>
       </section>`;
@@ -213,23 +224,33 @@ function renderKpiCards(chart: ChartSpec, options: ChartRenderOptions): string {
   const latest = latestDate ? (data[latestDate] ?? {}) : {};
   const previous = previousDate ? (data[previousDate] ?? {}) : {};
   const items = [
-    ["Revenue", "revenue"],
-    ["Gross profit", "grossProfit"],
-    ["Net income", "netIncome"],
-    ["Total assets", "totalAssets"],
-    ["Cash", "cash"],
+    ["Revenue", "revenue", "trend"],
+    ["Gross profit", "grossProfit", "margin"],
+    ["Net income", "netIncome", "income"],
+    ["Total assets", "totalAssets", "assets"],
+    ["Cash", "cash", "cash"],
   ] as const;
 
-  return `<div class="card-grid">${items
-    .map(([label, key]) => {
+  return `<div class="kpi-grid" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr))">${items
+    .map(([label, key, icon]) => {
       const value = latest[key] ?? 0;
       const change = value - (previous[key] ?? 0);
+      const previousValue = previous[key] ?? 0;
+      const percentChange = previousValue === 0 ? null : change / Math.abs(previousValue);
       const tone = change >= 0 ? "#2563eb" : "#475569";
+      const changeText = formatSignedAmount(change, options.amountScale);
+      const percentText = formatPercentMagnitude(percentChange);
 
-      return `<div class="card"><div class="label">${escapeHtml(label)}</div><div class="value">${formatAmount(
+      return `<div class="kpi-card" data-change-absolute="${escapeHtml(changeText)}" data-change-percent="${escapeHtml(
+        percentText,
+      )}"><div class="kpi-card-top"><div style="min-width:0"><div class="kpi-label">${escapeHtml(
+        label,
+      )}</div><div class="kpi-value">${formatAmount(
         value,
         options.amountScale,
-      )}</div><div style="margin-top:10px;color:${tone};font-weight:700">${formatSignedAmount(change, options.amountScale)}</div></div>`;
+      )}</div></div><div class="kpi-icon" aria-hidden="true">${renderKpiIcon(icon)}</div></div><div class="kpi-change" style="color:${tone}"><span class="kpi-change-absolute">${escapeHtml(
+        changeText,
+      )}</span><span class="kpi-change-percent">${escapeHtml(percentText)}</span></div></div>`;
     })
     .join("")}</div>`;
 }
@@ -556,6 +577,36 @@ function formatSignedAmount(value: number, scale: AmountScale): string {
   }
 
   return `${value > 0 ? "+" : "-"}${formatAmount(Math.abs(value), scale)}`;
+}
+
+function formatPercentMagnitude(value: number | null): string {
+  if (value === null || !Number.isFinite(value)) {
+    return "n/a";
+  }
+
+  return `${Math.abs(value * 100).toFixed(1)}%`;
+}
+
+function renderKpiIcon(icon: "trend" | "margin" | "income" | "assets" | "cash"): string {
+  const common = `viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"`;
+
+  if (icon === "trend") {
+    return `<svg ${common}><path d="M3 17l6-6 4 4 8-8"></path><path d="M14 7h7v7"></path></svg>`;
+  }
+
+  if (icon === "margin") {
+    return `<svg ${common}><path d="M4 19V5"></path><path d="M4 19h16"></path><path d="M8 15l3-3 3 2 5-7"></path></svg>`;
+  }
+
+  if (icon === "income") {
+    return `<svg ${common}><circle cx="12" cy="12" r="8"></circle><path d="M12 7v10"></path><path d="M9 10c0-1.7 6-1.7 6 0 0 3-6 1-6 4 0 1.7 6 1.7 6 0"></path></svg>`;
+  }
+
+  if (icon === "assets") {
+    return `<svg ${common}><path d="M4 20h16"></path><path d="M6 20V8l6-4 6 4v12"></path><path d="M9 20v-6h6v6"></path></svg>`;
+  }
+
+  return `<svg ${common}><rect x="4" y="7" width="16" height="11" rx="2"></rect><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"></path><path d="M8 12h8"></path></svg>`;
 }
 
 function round(value: number): number {

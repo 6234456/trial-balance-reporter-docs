@@ -130,6 +130,27 @@ describe("MVP reporting pipeline", () => {
     expect(html).not.toContain("https://");
   });
 
+  it("renders compact Reveal KPI cards with icons and percent movement", () => {
+    const parsed = loadFixture("sample-valid");
+    const statement = buildStatementModel(parsed);
+    const chartData = buildChartDataModel(statement, parsed.diagnostics);
+    const html = renderRevealReportHtml({ statement, chartData, diagnostics: parsed.diagnostics, config });
+    const host = document.createElement("div");
+    host.innerHTML = html;
+
+    const kpiSlide = host.querySelector('[data-slide-id="chart-kpi-summary"]');
+    const cards = kpiSlide?.querySelectorAll(".kpi-card") ?? [];
+    const revenueCard = cards[0];
+
+    expect(kpiSlide?.querySelector(".kpi-grid")?.getAttribute("style")).toContain("minmax(160px,1fr)");
+    expect(cards).toHaveLength(5);
+    expect(kpiSlide?.querySelectorAll(".kpi-icon")).toHaveLength(5);
+    expect(kpiSlide?.querySelectorAll(".kpi-change-percent")).toHaveLength(5);
+    expect(revenueCard?.querySelector(".kpi-change-absolute")?.textContent).toBe("+1,150k");
+    expect(revenueCard?.querySelector(".kpi-change-percent")?.textContent).toBe("39.0%");
+    expect(revenueCard?.textContent).not.toContain("+39.0%");
+  });
+
   it("renders tooltip targets for every chart type", () => {
     const parsed = loadFixture("sample-valid");
     const statement = buildStatementModel(parsed);
@@ -280,7 +301,7 @@ describe("MVP reporting pipeline", () => {
     expect(cards).toHaveLength(5);
     expect(host.querySelectorAll(".kpi-icon")).toHaveLength(5);
     expect(host.textContent).not.toContain("vs prior period / 较上期");
-    expect(cards[0]?.parentElement?.className).toContain("minmax(210px,1fr)");
+    expect(cards[0]?.parentElement?.className).toContain("minmax(160px,1fr)");
 
     const revenueCard = cards[0];
     const revenueChange = revenueCard?.querySelector(".kpi-change");
