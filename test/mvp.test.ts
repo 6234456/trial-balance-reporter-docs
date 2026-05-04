@@ -165,7 +165,7 @@ describe("MVP reporting pipeline", () => {
     expect(mergedTooltips[0]?.getAttribute("data-tooltip")).toContain("Net Income");
   });
 
-  it("renders working capital as a step line instead of bars", () => {
+  it("renders working capital as an angled line instead of bars or horizontal steps", () => {
     const parsed = loadFixture("sample-valid");
     const statement = buildStatementModel(parsed);
     const chartData = buildChartDataModel(statement, parsed.diagnostics);
@@ -179,10 +179,12 @@ describe("MVP reporting pipeline", () => {
 
     renderChart(host, chart, { amountScale: "thousand", plViewMode: "ytd" });
 
-    const stepLine = host.querySelector(".working-capital-step-line");
-    expect(stepLine).toBeTruthy();
-    expect(stepLine?.getAttribute("d")).toContain("H");
-    expect(stepLine?.getAttribute("d")).toContain("V");
+    const workingCapitalLine = host.querySelector(".working-capital-line");
+    const pathData = workingCapitalLine?.getAttribute("d") ?? "";
+    expect(workingCapitalLine).toBeTruthy();
+    expect(pathData).toContain("L");
+    expect(pathData).not.toMatch(/[HV]/);
+    expect(host.querySelector(".working-capital-step-line")).toBeNull();
     expect(host.querySelector("rect:not(.working-capital-hitbox)")).toBeNull();
     expect(host.querySelectorAll(".working-capital-hitbox[data-tooltip]")).toHaveLength(statement.periods.length);
   });

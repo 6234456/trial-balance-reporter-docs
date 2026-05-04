@@ -374,19 +374,23 @@ function renderWorkingCapital(
     .nice()
     .range([height - margin.bottom, margin.top]);
   const points = data.map((item) => ({ x: x(item.label) ?? margin.left, y: y(item.amount) }));
+  const line = d3
+    .line<{ x: number; y: number }>()
+    .x((point) => point.x)
+    .y((point) => point.y);
 
   drawAxes(svg, x, y, width, height, margin, options.amountScale);
 
   svg
     .append("path")
     .datum(points)
-    .attr("class", "working-capital-step-line")
+    .attr("class", "working-capital-line")
     .attr("fill", "none")
     .attr("stroke", fallbackColor)
     .attr("stroke-width", 3)
     .attr("stroke-linecap", "round")
     .attr("stroke-linejoin", "round")
-    .attr("d", buildStepPath(points));
+    .attr("d", line);
 
   svg
     .selectAll("circle.working-capital-marker")
@@ -447,21 +451,6 @@ function calculatePointHitboxWidth(points: number[], minX: number, maxX: number)
 
 function centeredHitboxX(center: number, width: number, minX: number, maxX: number): number {
   return Math.max(minX, Math.min(center - width / 2, maxX - width));
-}
-
-function buildStepPath(points: Array<{ x: number; y: number }>): string {
-  if (points.length === 0) {
-    return "";
-  }
-
-  const firstPoint = points[0];
-
-  if (!firstPoint) {
-    return "";
-  }
-
-  const remainingPoints = points.slice(1);
-  return remainingPoints.reduce((path, point) => `${path}H${point.x}V${point.y}`, `M${firstPoint.x},${firstPoint.y}`);
 }
 
 function renderBars(
