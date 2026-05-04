@@ -115,8 +115,18 @@ describe("MVP reporting pipeline", () => {
     expect(html).toContain("Board Report");
     expect(html).toContain("window.__REPORT_DATA__");
     expect(html).toContain("Reveal.initialize");
-    expect(html).toContain("renderChart");
+    expect(html).toContain('data-slide-id="statement-balance-sheet"');
+    expect(html).toContain('data-slide-id="statement-profit-or-loss"');
+    for (const chart of chartData.charts) {
+      expect(html).toContain(`data-chart-id="${chart.chartId}"`);
+    }
+    expect(html).toContain('class="chart-svg"');
+    expect(html).toContain("Assets vs Liabilities");
+    expect(html).toContain("Equity Composition");
+    expect(html).toContain("Working Capital");
     expect(html).toContain("PL_NET_INCOME");
+    expect(html).not.toContain('id="chart-host"');
+    expect(html).not.toContain("function renderChart");
     expect(html).not.toContain("https://");
   });
 
