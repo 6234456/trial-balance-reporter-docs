@@ -1,0 +1,855 @@
+{
+  "schemaVersion": "1.0",
+  "sourceFixture": "sample-valid",
+  "periods": [
+    {
+      "reportingDate": "2024-12-31",
+      "fiscalYear": "2024",
+      "sourceColumnIndex": 9,
+      "displayOrder": 1
+    },
+    {
+      "reportingDate": "2025-03-31",
+      "fiscalYear": "2025",
+      "sourceColumnIndex": 10,
+      "displayOrder": 2
+    },
+    {
+      "reportingDate": "2025-06-30",
+      "fiscalYear": "2025",
+      "sourceColumnIndex": 11,
+      "displayOrder": 3
+    },
+    {
+      "reportingDate": "2025-09-30",
+      "fiscalYear": "2025",
+      "sourceColumnIndex": 12,
+      "displayOrder": 4
+    },
+    {
+      "reportingDate": "2025-12-31",
+      "fiscalYear": "2025",
+      "sourceColumnIndex": 13,
+      "displayOrder": 5
+    }
+  ],
+  "currency": "EUR",
+  "views": [
+    "ending_balance",
+    "movement",
+    "pl_ytd",
+    "pl_period_activity"
+  ],
+  "statements": {
+    "balanceSheet": {
+      "rootLineIds": [
+        "BS_ASSETS",
+        "BS_LIABILITIES",
+        "BS_EQUITY"
+      ],
+      "lines": [
+        {
+          "lineId": "BS_ASSETS",
+          "statement": "BS",
+          "lineType": "header",
+          "parentLineId": null,
+          "label": {
+            "en": "Assets",
+            "zh": "资产"
+          },
+          "amountsByPeriod": {
+            "2024-12-31": {
+              "presentationAmount": 4380000.0,
+              "endingBalance": 4380000.0,
+              "movementAmount": null
+            },
+            "2025-03-31": {
+              "presentationAmount": 4510000.0,
+              "endingBalance": 4510000.0,
+              "movementAmount": 130000.0
+            },
+            "2025-06-30": {
+              "presentationAmount": 4603000.0,
+              "endingBalance": 4603000.0,
+              "movementAmount": 93000.0
+            },
+            "2025-09-30": {
+              "presentationAmount": 4706000.0,
+              "endingBalance": 4706000.0,
+              "movementAmount": 103000.0
+            },
+            "2025-12-31": {
+              "presentationAmount": 4865000.0,
+              "endingBalance": 4865000.0,
+              "movementAmount": 159000.0
+            }
+          },
+          "children": [
+            "BS_CASH",
+            "BS_AR",
+            "BS_INVENTORY",
+            "BS_PPE"
+          ]
+        },
+        {
+          "lineId": "BS_CASH",
+          "statement": "BS",
+          "lineType": "detail",
+          "parentLineId": "BS_ASSETS",
+          "label": {
+            "en": "Cash and cash equivalents",
+            "zh": "货币资金"
+          },
+          "amountsByPeriod": {
+            "2024-12-31": {
+              "presentationAmount": 700000.0,
+              "endingBalance": 700000.0,
+              "movementAmount": null
+            },
+            "2025-03-31": {
+              "presentationAmount": 760000.0,
+              "endingBalance": 760000.0,
+              "movementAmount": 60000.0
+            },
+            "2025-06-30": {
+              "presentationAmount": 743000.0,
+              "endingBalance": 743000.0,
+              "movementAmount": -17000.0
+            },
+            "2025-09-30": {
+              "presentationAmount": 776000.0,
+              "endingBalance": 776000.0,
+              "movementAmount": 33000.0
+            },
+            "2025-12-31": {
+              "presentationAmount": 865000.0,
+              "endingBalance": 865000.0,
+              "movementAmount": 89000.0
+            }
+          },
+          "children": []
+        },
+        {
+          "lineId": "BS_AR",
+          "statement": "BS",
+          "lineType": "detail",
+          "parentLineId": "BS_ASSETS",
+          "label": {
+            "en": "Trade receivables",
+            "zh": "应收账款"
+          },
+          "amountsByPeriod": {
+            "2024-12-31": {
+              "presentationAmount": 580000.0,
+              "endingBalance": 580000.0,
+              "movementAmount": null
+            },
+            "2025-03-31": {
+              "presentationAmount": 620000.0,
+              "endingBalance": 620000.0,
+              "movementAmount": 40000.0
+            },
+            "2025-06-30": {
+              "presentationAmount": 710000.0,
+              "endingBalance": 710000.0,
+              "movementAmount": 90000.0
+            },
+            "2025-09-30": {
+              "presentationAmount": 760000.0,
+              "endingBalance": 760000.0,
+              "movementAmount": 50000.0
+            },
+            "2025-12-31": {
+              "presentationAmount": 820000.0,
+              "endingBalance": 820000.0,
+              "movementAmount": 60000.0
+            }
+          },
+          "children": []
+        },
+        {
+          "lineId": "BS_INVENTORY",
+          "statement": "BS",
+          "lineType": "detail",
+          "parentLineId": "BS_ASSETS",
+          "label": {
+            "en": "Inventory",
+            "zh": "存货"
+          },
+          "amountsByPeriod": {
+            "2024-12-31": {
+              "presentationAmount": 900000.0,
+              "endingBalance": 900000.0,
+              "movementAmount": null
+            },
+            "2025-03-31": {
+              "presentationAmount": 980000.0,
+              "endingBalance": 980000.0,
+              "movementAmount": 80000.0
+            },
+            "2025-06-30": {
+              "presentationAmount": 1050000.0,
+              "endingBalance": 1050000.0,
+              "movementAmount": 70000.0
+            },
+            "2025-09-30": {
+              "presentationAmount": 1120000.0,
+              "endingBalance": 1120000.0,
+              "movementAmount": 70000.0
+            },
+            "2025-12-31": {
+              "presentationAmount": 1180000.0,
+              "endingBalance": 1180000.0,
+              "movementAmount": 60000.0
+            }
+          },
+          "children": []
+        },
+        {
+          "lineId": "BS_PPE",
+          "statement": "BS",
+          "lineType": "detail",
+          "parentLineId": "BS_ASSETS",
+          "label": {
+            "en": "Property, plant and equipment",
+            "zh": "固定资产"
+          },
+          "amountsByPeriod": {
+            "2024-12-31": {
+              "presentationAmount": 2200000.0,
+              "endingBalance": 2200000.0,
+              "movementAmount": null
+            },
+            "2025-03-31": {
+              "presentationAmount": 2150000.0,
+              "endingBalance": 2150000.0,
+              "movementAmount": -50000.0
+            },
+            "2025-06-30": {
+              "presentationAmount": 2100000.0,
+              "endingBalance": 2100000.0,
+              "movementAmount": -50000.0
+            },
+            "2025-09-30": {
+              "presentationAmount": 2050000.0,
+              "endingBalance": 2050000.0,
+              "movementAmount": -50000.0
+            },
+            "2025-12-31": {
+              "presentationAmount": 2000000.0,
+              "endingBalance": 2000000.0,
+              "movementAmount": -50000.0
+            }
+          },
+          "children": []
+        },
+        {
+          "lineId": "BS_LIABILITIES",
+          "statement": "BS",
+          "lineType": "header",
+          "parentLineId": null,
+          "label": {
+            "en": "Liabilities",
+            "zh": "负债"
+          },
+          "amountsByPeriod": {
+            "2024-12-31": {
+              "presentationAmount": 1360000.0,
+              "endingBalance": 1360000.0,
+              "movementAmount": null
+            },
+            "2025-03-31": {
+              "presentationAmount": 1400000.0,
+              "endingBalance": 1400000.0,
+              "movementAmount": 40000.0
+            },
+            "2025-06-30": {
+              "presentationAmount": 1430000.0,
+              "endingBalance": 1430000.0,
+              "movementAmount": 30000.0
+            },
+            "2025-09-30": {
+              "presentationAmount": 1450000.0,
+              "endingBalance": 1450000.0,
+              "movementAmount": 20000.0
+            },
+            "2025-12-31": {
+              "presentationAmount": 1470000.0,
+              "endingBalance": 1470000.0,
+              "movementAmount": 20000.0
+            }
+          },
+          "children": [
+            "BS_AP",
+            "BS_LOANS"
+          ]
+        },
+        {
+          "lineId": "BS_AP",
+          "statement": "BS",
+          "lineType": "detail",
+          "parentLineId": "BS_LIABILITIES",
+          "label": {
+            "en": "Trade payables",
+            "zh": "应付账款"
+          },
+          "amountsByPeriod": {
+            "2024-12-31": {
+              "presentationAmount": 460000.0,
+              "endingBalance": 460000.0,
+              "movementAmount": null
+            },
+            "2025-03-31": {
+              "presentationAmount": 520000.0,
+              "endingBalance": 520000.0,
+              "movementAmount": 60000.0
+            },
+            "2025-06-30": {
+              "presentationAmount": 570000.0,
+              "endingBalance": 570000.0,
+              "movementAmount": 50000.0
+            },
+            "2025-09-30": {
+              "presentationAmount": 610000.0,
+              "endingBalance": 610000.0,
+              "movementAmount": 40000.0
+            },
+            "2025-12-31": {
+              "presentationAmount": 650000.0,
+              "endingBalance": 650000.0,
+              "movementAmount": 40000.0
+            }
+          },
+          "children": []
+        },
+        {
+          "lineId": "BS_LOANS",
+          "statement": "BS",
+          "lineType": "detail",
+          "parentLineId": "BS_LIABILITIES",
+          "label": {
+            "en": "Bank loans",
+            "zh": "银行借款"
+          },
+          "amountsByPeriod": {
+            "2024-12-31": {
+              "presentationAmount": 900000.0,
+              "endingBalance": 900000.0,
+              "movementAmount": null
+            },
+            "2025-03-31": {
+              "presentationAmount": 880000.0,
+              "endingBalance": 880000.0,
+              "movementAmount": -20000.0
+            },
+            "2025-06-30": {
+              "presentationAmount": 860000.0,
+              "endingBalance": 860000.0,
+              "movementAmount": -20000.0
+            },
+            "2025-09-30": {
+              "presentationAmount": 840000.0,
+              "endingBalance": 840000.0,
+              "movementAmount": -20000.0
+            },
+            "2025-12-31": {
+              "presentationAmount": 820000.0,
+              "endingBalance": 820000.0,
+              "movementAmount": -20000.0
+            }
+          },
+          "children": []
+        },
+        {
+          "lineId": "BS_EQUITY",
+          "statement": "BS",
+          "lineType": "header",
+          "parentLineId": null,
+          "label": {
+            "en": "Equity",
+            "zh": "权益"
+          },
+          "amountsByPeriod": {
+            "2024-12-31": {
+              "presentationAmount": 3020000.0,
+              "endingBalance": 3020000.0,
+              "movementAmount": null
+            },
+            "2025-03-31": {
+              "presentationAmount": 3110000.0,
+              "endingBalance": 3110000.0,
+              "movementAmount": 90000.0
+            },
+            "2025-06-30": {
+              "presentationAmount": 3173000.0,
+              "endingBalance": 3173000.0,
+              "movementAmount": 63000.0
+            },
+            "2025-09-30": {
+              "presentationAmount": 3256000.0,
+              "endingBalance": 3256000.0,
+              "movementAmount": 83000.0
+            },
+            "2025-12-31": {
+              "presentationAmount": 3395000.0,
+              "endingBalance": 3395000.0,
+              "movementAmount": 139000.0
+            }
+          },
+          "children": [
+            "BS_SHARE_CAPITAL",
+            "BS_RETAINED_EARNINGS",
+            "BS_CURRENT_RESULT"
+          ]
+        },
+        {
+          "lineId": "BS_SHARE_CAPITAL",
+          "statement": "BS",
+          "lineType": "detail",
+          "parentLineId": "BS_EQUITY",
+          "label": {
+            "en": "Share capital",
+            "zh": "股本"
+          },
+          "amountsByPeriod": {
+            "2024-12-31": {
+              "presentationAmount": 1000000.0,
+              "endingBalance": 1000000.0,
+              "movementAmount": null
+            },
+            "2025-03-31": {
+              "presentationAmount": 1000000.0,
+              "endingBalance": 1000000.0,
+              "movementAmount": 0.0
+            },
+            "2025-06-30": {
+              "presentationAmount": 1000000.0,
+              "endingBalance": 1000000.0,
+              "movementAmount": 0.0
+            },
+            "2025-09-30": {
+              "presentationAmount": 1000000.0,
+              "endingBalance": 1000000.0,
+              "movementAmount": 0.0
+            },
+            "2025-12-31": {
+              "presentationAmount": 1000000.0,
+              "endingBalance": 1000000.0,
+              "movementAmount": 0.0
+            }
+          },
+          "children": []
+        },
+        {
+          "lineId": "BS_RETAINED_EARNINGS",
+          "statement": "BS",
+          "lineType": "detail",
+          "parentLineId": "BS_EQUITY",
+          "label": {
+            "en": "Retained earnings",
+            "zh": "留存收益"
+          },
+          "amountsByPeriod": {
+            "2024-12-31": {
+              "presentationAmount": 1705000.0,
+              "endingBalance": 1705000.0,
+              "movementAmount": null
+            },
+            "2025-03-31": {
+              "presentationAmount": 2020000.0,
+              "endingBalance": 2020000.0,
+              "movementAmount": 315000.0
+            },
+            "2025-06-30": {
+              "presentationAmount": 2020000.0,
+              "endingBalance": 2020000.0,
+              "movementAmount": 0.0
+            },
+            "2025-09-30": {
+              "presentationAmount": 2020000.0,
+              "endingBalance": 2020000.0,
+              "movementAmount": 0.0
+            },
+            "2025-12-31": {
+              "presentationAmount": 2020000.0,
+              "endingBalance": 2020000.0,
+              "movementAmount": 0.0
+            }
+          },
+          "children": []
+        },
+        {
+          "lineId": "BS_CURRENT_RESULT",
+          "statement": "BS",
+          "lineType": "synthetic",
+          "parentLineId": "BS_EQUITY",
+          "label": {
+            "en": "Current year result",
+            "zh": "本年利润"
+          },
+          "amountsByPeriod": {
+            "2024-12-31": {
+              "presentationAmount": 315000.0,
+              "endingBalance": 315000.0,
+              "movementAmount": null
+            },
+            "2025-03-31": {
+              "presentationAmount": 90000.0,
+              "endingBalance": 90000.0,
+              "movementAmount": -225000.0
+            },
+            "2025-06-30": {
+              "presentationAmount": 153000.0,
+              "endingBalance": 153000.0,
+              "movementAmount": 63000.0
+            },
+            "2025-09-30": {
+              "presentationAmount": 236000.0,
+              "endingBalance": 236000.0,
+              "movementAmount": 83000.0
+            },
+            "2025-12-31": {
+              "presentationAmount": 375000.0,
+              "endingBalance": 375000.0,
+              "movementAmount": 139000.0
+            }
+          },
+          "children": []
+        },
+        {
+          "lineId": "BS_WORKING_CAPITAL",
+          "statement": "BS",
+          "lineType": "synthetic",
+          "parentLineId": null,
+          "label": {
+            "en": "Working capital",
+            "zh": "营运资本"
+          },
+          "amountsByPeriod": {
+            "2024-12-31": {
+              "presentationAmount": 1020000.0,
+              "endingBalance": 1020000.0,
+              "movementAmount": null
+            },
+            "2025-03-31": {
+              "presentationAmount": 1080000.0,
+              "endingBalance": 1080000.0,
+              "movementAmount": 60000.0
+            },
+            "2025-06-30": {
+              "presentationAmount": 1190000.0,
+              "endingBalance": 1190000.0,
+              "movementAmount": 110000.0
+            },
+            "2025-09-30": {
+              "presentationAmount": 1270000.0,
+              "endingBalance": 1270000.0,
+              "movementAmount": 80000.0
+            },
+            "2025-12-31": {
+              "presentationAmount": 1350000.0,
+              "endingBalance": 1350000.0,
+              "movementAmount": 80000.0
+            }
+          },
+          "children": []
+        }
+      ]
+    },
+    "profitOrLoss": {
+      "rootLineIds": [
+        "PL_REVENUE",
+        "PL_COGS",
+        "PL_GROSS_PROFIT",
+        "PL_OPEX",
+        "PL_FINANCE_COST",
+        "PL_TAX",
+        "PL_NET_INCOME"
+      ],
+      "lines": [
+        {
+          "lineId": "PL_REVENUE",
+          "statement": "PL",
+          "lineType": "detail",
+          "parentLineId": null,
+          "label": {
+            "en": "Revenue",
+            "zh": "收入"
+          },
+          "amountsByPeriod": {
+            "2024-12-31": {
+              "presentationAmount": 3800000.0,
+              "ytdAmount": 3800000.0,
+              "periodActivityAmount": 3800000.0
+            },
+            "2025-03-31": {
+              "presentationAmount": 950000.0,
+              "ytdAmount": 950000.0,
+              "periodActivityAmount": 950000.0
+            },
+            "2025-06-30": {
+              "presentationAmount": 1900000.0,
+              "ytdAmount": 1900000.0,
+              "periodActivityAmount": 950000.0
+            },
+            "2025-09-30": {
+              "presentationAmount": 2950000.0,
+              "ytdAmount": 2950000.0,
+              "periodActivityAmount": 1050000.0
+            },
+            "2025-12-31": {
+              "presentationAmount": 4100000.0,
+              "ytdAmount": 4100000.0,
+              "periodActivityAmount": 1150000.0
+            }
+          },
+          "children": []
+        },
+        {
+          "lineId": "PL_COGS",
+          "statement": "PL",
+          "lineType": "detail",
+          "parentLineId": null,
+          "label": {
+            "en": "Cost of goods sold",
+            "zh": "销售成本"
+          },
+          "amountsByPeriod": {
+            "2024-12-31": {
+              "presentationAmount": 2250000.0,
+              "ytdAmount": 2250000.0,
+              "periodActivityAmount": 2250000.0
+            },
+            "2025-03-31": {
+              "presentationAmount": 560000.0,
+              "ytdAmount": 560000.0,
+              "periodActivityAmount": 560000.0
+            },
+            "2025-06-30": {
+              "presentationAmount": 1130000.0,
+              "ytdAmount": 1130000.0,
+              "periodActivityAmount": 570000.0
+            },
+            "2025-09-30": {
+              "presentationAmount": 1760000.0,
+              "ytdAmount": 1760000.0,
+              "periodActivityAmount": 630000.0
+            },
+            "2025-12-31": {
+              "presentationAmount": 2420000.0,
+              "ytdAmount": 2420000.0,
+              "periodActivityAmount": 660000.0
+            }
+          },
+          "children": []
+        },
+        {
+          "lineId": "PL_GROSS_PROFIT",
+          "statement": "PL",
+          "lineType": "subtotal",
+          "parentLineId": null,
+          "label": {
+            "en": "Gross profit",
+            "zh": "毛利"
+          },
+          "amountsByPeriod": {
+            "2024-12-31": {
+              "presentationAmount": 1550000.0,
+              "ytdAmount": 1550000.0,
+              "periodActivityAmount": 1550000.0
+            },
+            "2025-03-31": {
+              "presentationAmount": 390000.0,
+              "ytdAmount": 390000.0,
+              "periodActivityAmount": 390000.0
+            },
+            "2025-06-30": {
+              "presentationAmount": 770000.0,
+              "ytdAmount": 770000.0,
+              "periodActivityAmount": 380000.0
+            },
+            "2025-09-30": {
+              "presentationAmount": 1190000.0,
+              "ytdAmount": 1190000.0,
+              "periodActivityAmount": 420000.0
+            },
+            "2025-12-31": {
+              "presentationAmount": 1680000.0,
+              "ytdAmount": 1680000.0,
+              "periodActivityAmount": 490000.0
+            }
+          },
+          "children": []
+        },
+        {
+          "lineId": "PL_OPEX",
+          "statement": "PL",
+          "lineType": "detail",
+          "parentLineId": null,
+          "label": {
+            "en": "Operating expenses",
+            "zh": "经营费用"
+          },
+          "amountsByPeriod": {
+            "2024-12-31": {
+              "presentationAmount": 1020000.0,
+              "ytdAmount": 1020000.0,
+              "periodActivityAmount": 1020000.0
+            },
+            "2025-03-31": {
+              "presentationAmount": 250000.0,
+              "ytdAmount": 250000.0,
+              "periodActivityAmount": 250000.0
+            },
+            "2025-06-30": {
+              "presentationAmount": 510000.0,
+              "ytdAmount": 510000.0,
+              "periodActivityAmount": 260000.0
+            },
+            "2025-09-30": {
+              "presentationAmount": 790000.0,
+              "ytdAmount": 790000.0,
+              "periodActivityAmount": 280000.0
+            },
+            "2025-12-31": {
+              "presentationAmount": 1080000.0,
+              "ytdAmount": 1080000.0,
+              "periodActivityAmount": 290000.0
+            }
+          },
+          "children": []
+        },
+        {
+          "lineId": "PL_FINANCE_COST",
+          "statement": "PL",
+          "lineType": "detail",
+          "parentLineId": null,
+          "label": {
+            "en": "Finance costs",
+            "zh": "财务费用"
+          },
+          "amountsByPeriod": {
+            "2024-12-31": {
+              "presentationAmount": 130000.0,
+              "ytdAmount": 130000.0,
+              "periodActivityAmount": 130000.0
+            },
+            "2025-03-31": {
+              "presentationAmount": 30000.0,
+              "ytdAmount": 30000.0,
+              "periodActivityAmount": 30000.0
+            },
+            "2025-06-30": {
+              "presentationAmount": 65000.0,
+              "ytdAmount": 65000.0,
+              "periodActivityAmount": 35000.0
+            },
+            "2025-09-30": {
+              "presentationAmount": 98000.0,
+              "ytdAmount": 98000.0,
+              "periodActivityAmount": 33000.0
+            },
+            "2025-12-31": {
+              "presentationAmount": 135000.0,
+              "ytdAmount": 135000.0,
+              "periodActivityAmount": 37000.0
+            }
+          },
+          "children": []
+        },
+        {
+          "lineId": "PL_TAX",
+          "statement": "PL",
+          "lineType": "detail",
+          "parentLineId": null,
+          "label": {
+            "en": "Income tax expense",
+            "zh": "所得税费用"
+          },
+          "amountsByPeriod": {
+            "2024-12-31": {
+              "presentationAmount": 85000.0,
+              "ytdAmount": 85000.0,
+              "periodActivityAmount": 85000.0
+            },
+            "2025-03-31": {
+              "presentationAmount": 20000.0,
+              "ytdAmount": 20000.0,
+              "periodActivityAmount": 20000.0
+            },
+            "2025-06-30": {
+              "presentationAmount": 42000.0,
+              "ytdAmount": 42000.0,
+              "periodActivityAmount": 22000.0
+            },
+            "2025-09-30": {
+              "presentationAmount": 66000.0,
+              "ytdAmount": 66000.0,
+              "periodActivityAmount": 24000.0
+            },
+            "2025-12-31": {
+              "presentationAmount": 90000.0,
+              "ytdAmount": 90000.0,
+              "periodActivityAmount": 24000.0
+            }
+          },
+          "children": []
+        },
+        {
+          "lineId": "PL_NET_INCOME",
+          "statement": "PL",
+          "lineType": "subtotal",
+          "parentLineId": null,
+          "label": {
+            "en": "Net income",
+            "zh": "净利润"
+          },
+          "amountsByPeriod": {
+            "2024-12-31": {
+              "presentationAmount": 315000.0,
+              "ytdAmount": 315000.0,
+              "periodActivityAmount": 315000.0
+            },
+            "2025-03-31": {
+              "presentationAmount": 90000.0,
+              "ytdAmount": 90000.0,
+              "periodActivityAmount": 90000.0
+            },
+            "2025-06-30": {
+              "presentationAmount": 153000.0,
+              "ytdAmount": 153000.0,
+              "periodActivityAmount": 63000.0
+            },
+            "2025-09-30": {
+              "presentationAmount": 236000.0,
+              "ytdAmount": 236000.0,
+              "periodActivityAmount": 83000.0
+            },
+            "2025-12-31": {
+              "presentationAmount": 375000.0,
+              "ytdAmount": 375000.0,
+              "periodActivityAmount": 139000.0
+            }
+          },
+          "children": []
+        }
+      ]
+    }
+  },
+  "checks": {
+    "tbSignedAmountSumByPeriod": {
+      "2024-12-31": 0,
+      "2025-03-31": 0,
+      "2025-06-30": 0,
+      "2025-09-30": 0,
+      "2025-12-31": 0
+    },
+    "fsBalanceCheckByPeriod": {
+      "2024-12-31": 0.0,
+      "2025-03-31": 0.0,
+      "2025-06-30": 0.0,
+      "2025-09-30": 0.0,
+      "2025-12-31": 0.0
+    }
+  }
+}

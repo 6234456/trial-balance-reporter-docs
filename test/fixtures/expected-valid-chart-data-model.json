@@ -1,0 +1,412 @@
+{
+  "schemaVersion": "1.0",
+  "sourceFixture": "sample-valid",
+  "charts": [
+    {
+      "chartId": "kpi-summary",
+      "chartType": "kpi-cards",
+      "title": {
+        "en": "Executive KPIs",
+        "zh": "核心财务指标"
+      },
+      "sourceLineIds": [
+        "PL_REVENUE",
+        "PL_GROSS_PROFIT",
+        "PL_NET_INCOME",
+        "BS_ASSETS",
+        "BS_CASH"
+      ],
+      "data": {
+        "2024-12-31": {
+          "revenue": 3800000.0,
+          "grossProfit": 1550000.0,
+          "netIncome": 315000.0,
+          "totalAssets": 4380000.0,
+          "cash": 700000.0
+        },
+        "2025-03-31": {
+          "revenue": 950000.0,
+          "grossProfit": 390000.0,
+          "netIncome": 90000.0,
+          "totalAssets": 4510000.0,
+          "cash": 760000.0
+        },
+        "2025-06-30": {
+          "revenue": 1900000.0,
+          "grossProfit": 770000.0,
+          "netIncome": 153000.0,
+          "totalAssets": 4603000.0,
+          "cash": 743000.0
+        },
+        "2025-09-30": {
+          "revenue": 2950000.0,
+          "grossProfit": 1190000.0,
+          "netIncome": 236000.0,
+          "totalAssets": 4706000.0,
+          "cash": 776000.0
+        },
+        "2025-12-31": {
+          "revenue": 4100000.0,
+          "grossProfit": 1680000.0,
+          "netIncome": 375000.0,
+          "totalAssets": 4865000.0,
+          "cash": 865000.0
+        }
+      }
+    },
+    {
+      "chartId": "pl-trend",
+      "chartType": "trend-line",
+      "title": {
+        "en": "Revenue / Gross Profit / Net Income Trend",
+        "zh": "收入 / 毛利 / 净利润趋势"
+      },
+      "sourceLineIds": [
+        "PL_REVENUE",
+        "PL_GROSS_PROFIT",
+        "PL_NET_INCOME"
+      ],
+      "data": [
+        {
+          "reportingDate": "2024-12-31",
+          "series": "Revenue",
+          "lineId": "PL_REVENUE",
+          "ytdAmount": 3800000.0,
+          "periodActivityAmount": 3800000.0
+        },
+        {
+          "reportingDate": "2025-03-31",
+          "series": "Revenue",
+          "lineId": "PL_REVENUE",
+          "ytdAmount": 950000.0,
+          "periodActivityAmount": 950000.0
+        },
+        {
+          "reportingDate": "2025-06-30",
+          "series": "Revenue",
+          "lineId": "PL_REVENUE",
+          "ytdAmount": 1900000.0,
+          "periodActivityAmount": 950000.0
+        },
+        {
+          "reportingDate": "2025-09-30",
+          "series": "Revenue",
+          "lineId": "PL_REVENUE",
+          "ytdAmount": 2950000.0,
+          "periodActivityAmount": 1050000.0
+        },
+        {
+          "reportingDate": "2025-12-31",
+          "series": "Revenue",
+          "lineId": "PL_REVENUE",
+          "ytdAmount": 4100000.0,
+          "periodActivityAmount": 1150000.0
+        },
+        {
+          "reportingDate": "2024-12-31",
+          "series": "Gross Profit",
+          "lineId": "PL_GROSS_PROFIT",
+          "ytdAmount": 1550000.0,
+          "periodActivityAmount": 1550000.0
+        },
+        {
+          "reportingDate": "2025-03-31",
+          "series": "Gross Profit",
+          "lineId": "PL_GROSS_PROFIT",
+          "ytdAmount": 390000.0,
+          "periodActivityAmount": 390000.0
+        },
+        {
+          "reportingDate": "2025-06-30",
+          "series": "Gross Profit",
+          "lineId": "PL_GROSS_PROFIT",
+          "ytdAmount": 770000.0,
+          "periodActivityAmount": 380000.0
+        },
+        {
+          "reportingDate": "2025-09-30",
+          "series": "Gross Profit",
+          "lineId": "PL_GROSS_PROFIT",
+          "ytdAmount": 1190000.0,
+          "periodActivityAmount": 420000.0
+        },
+        {
+          "reportingDate": "2025-12-31",
+          "series": "Gross Profit",
+          "lineId": "PL_GROSS_PROFIT",
+          "ytdAmount": 1680000.0,
+          "periodActivityAmount": 490000.0
+        },
+        {
+          "reportingDate": "2024-12-31",
+          "series": "Net Income",
+          "lineId": "PL_NET_INCOME",
+          "ytdAmount": 315000.0,
+          "periodActivityAmount": 315000.0
+        },
+        {
+          "reportingDate": "2025-03-31",
+          "series": "Net Income",
+          "lineId": "PL_NET_INCOME",
+          "ytdAmount": 90000.0,
+          "periodActivityAmount": 90000.0
+        },
+        {
+          "reportingDate": "2025-06-30",
+          "series": "Net Income",
+          "lineId": "PL_NET_INCOME",
+          "ytdAmount": 153000.0,
+          "periodActivityAmount": 63000.0
+        },
+        {
+          "reportingDate": "2025-09-30",
+          "series": "Net Income",
+          "lineId": "PL_NET_INCOME",
+          "ytdAmount": 236000.0,
+          "periodActivityAmount": 83000.0
+        },
+        {
+          "reportingDate": "2025-12-31",
+          "series": "Net Income",
+          "lineId": "PL_NET_INCOME",
+          "ytdAmount": 375000.0,
+          "periodActivityAmount": 139000.0
+        }
+      ]
+    },
+    {
+      "chartId": "pl-waterfall",
+      "chartType": "waterfall",
+      "title": {
+        "en": "P&L Waterfall",
+        "zh": "损益瀑布图"
+      },
+      "sourceLineIds": [
+        "PL_REVENUE",
+        "PL_COGS",
+        "PL_OPEX",
+        "PL_FINANCE_COST",
+        "PL_TAX",
+        "PL_NET_INCOME"
+      ],
+      "data": {
+        "2024-12-31": [
+          {
+            "lineId": "PL_REVENUE",
+            "label": "Revenue",
+            "amount": 3800000.0
+          },
+          {
+            "lineId": "PL_COGS",
+            "label": "COGS",
+            "amount": -2250000.0
+          },
+          {
+            "lineId": "PL_OPEX",
+            "label": "OPEX",
+            "amount": -1020000.0
+          },
+          {
+            "lineId": "PL_FINANCE_COST",
+            "label": "Finance costs",
+            "amount": -130000.0
+          },
+          {
+            "lineId": "PL_TAX",
+            "label": "Income tax",
+            "amount": -85000.0
+          },
+          {
+            "lineId": "PL_NET_INCOME",
+            "label": "Net income",
+            "amount": 315000.0,
+            "isTotal": true
+          }
+        ],
+        "2025-03-31": [
+          {
+            "lineId": "PL_REVENUE",
+            "label": "Revenue",
+            "amount": 950000.0
+          },
+          {
+            "lineId": "PL_COGS",
+            "label": "COGS",
+            "amount": -560000.0
+          },
+          {
+            "lineId": "PL_OPEX",
+            "label": "OPEX",
+            "amount": -250000.0
+          },
+          {
+            "lineId": "PL_FINANCE_COST",
+            "label": "Finance costs",
+            "amount": -30000.0
+          },
+          {
+            "lineId": "PL_TAX",
+            "label": "Income tax",
+            "amount": -20000.0
+          },
+          {
+            "lineId": "PL_NET_INCOME",
+            "label": "Net income",
+            "amount": 90000.0,
+            "isTotal": true
+          }
+        ],
+        "2025-06-30": [
+          {
+            "lineId": "PL_REVENUE",
+            "label": "Revenue",
+            "amount": 1900000.0
+          },
+          {
+            "lineId": "PL_COGS",
+            "label": "COGS",
+            "amount": -1130000.0
+          },
+          {
+            "lineId": "PL_OPEX",
+            "label": "OPEX",
+            "amount": -510000.0
+          },
+          {
+            "lineId": "PL_FINANCE_COST",
+            "label": "Finance costs",
+            "amount": -65000.0
+          },
+          {
+            "lineId": "PL_TAX",
+            "label": "Income tax",
+            "amount": -42000.0
+          },
+          {
+            "lineId": "PL_NET_INCOME",
+            "label": "Net income",
+            "amount": 153000.0,
+            "isTotal": true
+          }
+        ],
+        "2025-09-30": [
+          {
+            "lineId": "PL_REVENUE",
+            "label": "Revenue",
+            "amount": 2950000.0
+          },
+          {
+            "lineId": "PL_COGS",
+            "label": "COGS",
+            "amount": -1760000.0
+          },
+          {
+            "lineId": "PL_OPEX",
+            "label": "OPEX",
+            "amount": -790000.0
+          },
+          {
+            "lineId": "PL_FINANCE_COST",
+            "label": "Finance costs",
+            "amount": -98000.0
+          },
+          {
+            "lineId": "PL_TAX",
+            "label": "Income tax",
+            "amount": -66000.0
+          },
+          {
+            "lineId": "PL_NET_INCOME",
+            "label": "Net income",
+            "amount": 236000.0,
+            "isTotal": true
+          }
+        ],
+        "2025-12-31": [
+          {
+            "lineId": "PL_REVENUE",
+            "label": "Revenue",
+            "amount": 4100000.0
+          },
+          {
+            "lineId": "PL_COGS",
+            "label": "COGS",
+            "amount": -2420000.0
+          },
+          {
+            "lineId": "PL_OPEX",
+            "label": "OPEX",
+            "amount": -1080000.0
+          },
+          {
+            "lineId": "PL_FINANCE_COST",
+            "label": "Finance costs",
+            "amount": -135000.0
+          },
+          {
+            "lineId": "PL_TAX",
+            "label": "Income tax",
+            "amount": -90000.0
+          },
+          {
+            "lineId": "PL_NET_INCOME",
+            "label": "Net income",
+            "amount": 375000.0,
+            "isTotal": true
+          }
+        ]
+      }
+    },
+    {
+      "chartId": "working-capital",
+      "chartType": "working-capital",
+      "title": {
+        "en": "Working Capital",
+        "zh": "营运资本"
+      },
+      "sourceLineIds": [
+        "BS_AR",
+        "BS_INVENTORY",
+        "BS_AP",
+        "BS_WORKING_CAPITAL"
+      ],
+      "data": [
+        {
+          "reportingDate": "2024-12-31",
+          "ar": 580000.0,
+          "inventory": 900000.0,
+          "ap": 460000.0,
+          "workingCapital": 1020000.0
+        },
+        {
+          "reportingDate": "2025-03-31",
+          "ar": 620000.0,
+          "inventory": 980000.0,
+          "ap": 520000.0,
+          "workingCapital": 1080000.0
+        },
+        {
+          "reportingDate": "2025-06-30",
+          "ar": 710000.0,
+          "inventory": 1050000.0,
+          "ap": 570000.0,
+          "workingCapital": 1190000.0
+        },
+        {
+          "reportingDate": "2025-09-30",
+          "ar": 760000.0,
+          "inventory": 1120000.0,
+          "ap": 610000.0,
+          "workingCapital": 1270000.0
+        },
+        {
+          "reportingDate": "2025-12-31",
+          "ar": 820000.0,
+          "inventory": 1180000.0,
+          "ap": 650000.0,
+          "workingCapital": 1350000.0
+        }
+      ]
+    }
+  ]
+}

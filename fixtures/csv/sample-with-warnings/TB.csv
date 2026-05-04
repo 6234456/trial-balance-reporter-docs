@@ -1,0 +1,19 @@
+#entity_id,#entity_name,#currency,#account_code,#account_name,#normal_balance,#account_group,#cost_center,#note,2024-12-31,2025-03-31,2025-06-30,2025-09-30,2025-12-31
+DEMO,Demo Manufacturing GmbH,EUR,100000,Cash and bank,D,Cash,,,700000,760000,743000,776000,865000
+DEMO,Demo Manufacturing GmbH,EUR,120000,Trade receivables,D,Receivables,,,580000,620000,710000,760000,820000
+DEMO,Demo Manufacturing GmbH,EUR,130000,Inventory,D,Inventory,,,900000,980000,1050000,1120000,1180000
+DEMO,Demo Manufacturing GmbH,EUR,160000,"Property, plant and equipment",D,Fixed assets,,,2200000,2150000,2100000,2050000,2000000
+DEMO,Demo Manufacturing GmbH,EUR,330000,Trade payables,C,Payables,,,-460000,-520000,-570000,-610000,-650000
+DEMO,Demo Manufacturing GmbH,EUR,360000,Bank loans,C,Debt,,,-900000,-880000,-860000,-840000,-820000
+DEMO,Demo Manufacturing GmbH,EUR,300000,Share capital,C,Equity,,,-1000000,-1000000,-1000000,-1000000,-1000000
+DEMO,Demo Manufacturing GmbH,EUR,310000,Retained earnings,C,Equity,,,-1705000,-2020000,-2020000,-2020000,-2020000
+DEMO,Demo Manufacturing GmbH,EUR,400000,Revenue,C,Revenue,,YTD PL,-3800000,-950000,-1900000,-2950000,-4100000
+DEMO,Demo Manufacturing GmbH,EUR,500000,Cost of goods sold,D,COGS,,YTD PL,2250000,560000,1130000,1760000,2420000
+DEMO,Demo Manufacturing GmbH,EUR,610000,Personnel expenses,D,OPEX,,YTD PL,780000,190000,390000,610000,840000
+DEMO,Demo Manufacturing GmbH,EUR,620000,Rent expenses,D,OPEX,,YTD PL,240000,60000,120000,180000,240000
+DEMO,Demo Manufacturing GmbH,EUR,700000,Interest expenses,D,Finance,,YTD PL,130000,30000,65000,98000,135000
+DEMO,Demo Manufacturing GmbH,EUR,800000,Income tax expense,D,Tax,,YTD PL,85000,20000,42000,66000,90000
+DEMO,Demo Manufacturing GmbH,EUR,199000,Prepaid expenses,D,Other current assets,,Unmapped non-zero,5000,5500,6000,6500,7000
+DEMO,Demo Manufacturing GmbH,EUR,399000,Other liabilities,C,Other liabilities,,Unmapped non-zero offset,-5000,-5500,-6000,-6500,-7000
+DEMO,Demo Manufacturing GmbH,EUR,100000,Cash at banks - duplicate name,D,Cash,,Duplicate account code/name mismatch,0,0,0,0,0
+DEMO,Demo Manufacturing GmbH,EUR,999999,Dormant suspense account,D,Suspense,,Unmapped zero,0,0,0,0,0

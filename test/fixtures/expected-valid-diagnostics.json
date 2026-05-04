@@ -1,0 +1,31 @@
+{
+  "sourceFixture": "sample-valid",
+  "summary": {
+    "blocking": 0,
+    "warning": 0,
+    "info": 3
+  },
+  "items": [
+    {
+      "code": "INFO_SHEETS_FOUND",
+      "severity": "info",
+      "messageKey": "diagnostics.info.sheetsFound"
+    },
+    {
+      "code": "INFO_PERIOD_COLUMNS_DETECTED",
+      "severity": "info",
+      "messageKey": "diagnostics.info.periodColumnsDetected",
+      "meta": {
+        "count": 5
+      }
+    },
+    {
+      "code": "INFO_SINGLE_CURRENCY",
+      "severity": "info",
+      "messageKey": "diagnostics.info.singleCurrency",
+      "meta": {
+        "currency": "EUR"
+      }
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "sourceFixture": "sample-with-warnings",
+  "summary": {
+    "blocking": 0,
+    "warning": 4,
+    "info": 4
+  },
+  "items": [
+    {
+      "code": "WARN_UNMAPPED_NON_ZERO_ACCOUNT",
+      "severity": "warning",
+      "messageKey": "diagnostics.warning.unmappedNonZeroAccount",
+      "meta": {
+        "accountCode": "199000"
+      }
+    },
+    {
+      "code": "WARN_UNMAPPED_NON_ZERO_ACCOUNT",
+      "severity": "warning",
+      "messageKey": "diagnostics.warning.unmappedNonZeroAccount",
+      "meta": {
+        "accountCode": "399000"
+      }
+    },
+    {
+      "code": "WARN_DUPLICATE_ACCOUNT_NAME",
+      "severity": "warning",
+      "messageKey": "diagnostics.warning.duplicateAccountName",
+      "meta": {
+        "accountCode": "100000"
+      }
+    },
+    {
+      "code": "WARN_MAPPING_CONFLICT",
+      "severity": "warning",
+      "messageKey": "diagnostics.warning.mappingConflict",
+      "meta": {
+        "accountCode": "100000",
+        "selectedRuleId": "BS_CASH",
+        "conflictingRuleId": "BS_CASH_PREFIX_CONFLICT"
+      }
+    },
+    {
+      "code": "INFO_UNMAPPED_ZERO_ACCOUNT",
+      "severity": "info",
+      "messageKey": "diagnostics.info.unmappedZeroAccount",
+      "meta": {
+        "accountCode": "999999"
+      }
+    }
+  ]
+}

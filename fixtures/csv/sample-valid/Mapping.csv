@@ -1,0 +1,21 @@
+#rule_id,#statement,#section,#line_id,#parent_line_id,#line_label_en,#line_label_zh,#line_type,#match_type,#account_from,#account_to,#account_prefix,#sign,#sort_order,#chart_group,#chart_role,#source_formula,#include_in_parent_total,#note
+BS_ASSETS_HEADER,BS,Assets,BS_ASSETS,,Assets,资产,header,,,,,1,100,BS,section,,TRUE,Section header
+BS_CASH,BS,Assets,BS_CASH,BS_ASSETS,Cash and cash equivalents,货币资金,detail,range,100000,109999,,1,110,Assets,composition,,TRUE,Cash accounts
+BS_AR,BS,Assets,BS_AR,BS_ASSETS,Trade receivables,应收账款,detail,range,120000,129999,,1,120,WorkingCapital,working_capital,,TRUE,Trade AR
+BS_INVENTORY,BS,Assets,BS_INVENTORY,BS_ASSETS,Inventory,存货,detail,range,130000,139999,,1,130,WorkingCapital,working_capital,,TRUE,Inventory
+BS_PPE,BS,Assets,BS_PPE,BS_ASSETS,"Property, plant and equipment",固定资产,detail,range,160000,169999,,1,140,Assets,composition,,TRUE,PPE
+BS_LIABILITIES_HEADER,BS,Liabilities,BS_LIABILITIES,,Liabilities,负债,header,,,,,-1,200,BS,section,,TRUE,Section header
+BS_AP,BS,Liabilities,BS_AP,BS_LIABILITIES,Trade payables,应付账款,detail,range,330000,339999,,-1,210,WorkingCapital,working_capital,,TRUE,Trade AP
+BS_LOANS,BS,Liabilities,BS_LOANS,BS_LIABILITIES,Bank loans,银行借款,detail,range,360000,369999,,-1,220,Liabilities,composition,,TRUE,Bank loans
+BS_EQUITY_HEADER,BS,Equity,BS_EQUITY,,Equity,权益,header,,,,,-1,300,BS,section,,TRUE,Section header
+BS_SHARE_CAPITAL,BS,Equity,BS_SHARE_CAPITAL,BS_EQUITY,Share capital,股本,detail,range,300000,309999,,-1,310,Equity,composition,,TRUE,Share capital
+BS_RETAINED_EARNINGS,BS,Equity,BS_RETAINED_EARNINGS,BS_EQUITY,Retained earnings,留存收益,detail,range,310000,319999,,-1,320,Equity,composition,,TRUE,Retained earnings
+BS_CURRENT_RESULT,BS,Equity,BS_CURRENT_RESULT,BS_EQUITY,Current year result,本年利润,synthetic,,,,,1,330,Equity,composition,PL_NET_INCOME,TRUE,Bridge current-year P&L result into equity
+BS_WORKING_CAPITAL,BS,Analytics,BS_WORKING_CAPITAL,,Working capital,营运资本,synthetic,,,,,1,900,WorkingCapital,working_capital,BS_AR+BS_INVENTORY-BS_AP,FALSE,Analytical line for charts only
+PL_REVENUE,PL,Profit or Loss,PL_REVENUE,,Revenue,收入,detail,range,400000,409999,,-1,400,PL,"summary,trending,waterfall",,TRUE,Revenue
+PL_COGS,PL,Profit or Loss,PL_COGS,,Cost of goods sold,销售成本,detail,range,500000,509999,,1,410,PL,waterfall,,TRUE,COGS
+PL_OPEX,PL,Profit or Loss,PL_OPEX,,Operating expenses,经营费用,detail,range,600000,699999,,1,430,PL,waterfall,,TRUE,OPEX
+PL_FINANCE_COST,PL,Profit or Loss,PL_FINANCE_COST,,Finance costs,财务费用,detail,range,700000,799999,,1,440,PL,waterfall,,TRUE,Finance costs
+PL_TAX,PL,Profit or Loss,PL_TAX,,Income tax expense,所得税费用,detail,range,800000,899999,,1,450,PL,waterfall,,TRUE,Income tax
+PL_GROSS_PROFIT,PL,Profit or Loss,PL_GROSS_PROFIT,,Gross profit,毛利,subtotal,,,,,1,420,PL,"summary,trending,waterfall",PL_REVENUE-PL_COGS,FALSE,Gross profit
+PL_NET_INCOME,PL,Profit or Loss,PL_NET_INCOME,,Net income,净利润,subtotal,,,,,1,460,PL,"summary,trending,waterfall",PL_REVENUE-PL_COGS-PL_OPEX-PL_FINANCE_COST-PL_TAX,FALSE,Net income
