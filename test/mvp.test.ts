@@ -126,6 +126,15 @@ describe("MVP reporting pipeline", () => {
     expect(html).not.toContain("grid-template-rows: 1fr auto");
     expect(html).toContain(".reveal section { position: relative; display: none; min-height: 100vh; padding: 124px 72px 48px;");
     expect(html).toContain("h1, h2 { position: absolute; top: 42px; left: 72px; right: 72px;");
+    expect(html).toContain(".controls button { width: 44px; height: 44px; border: 0; background: transparent; opacity: 0.45;");
+    expect(html).toContain(".controls button:hover, .controls button:focus-visible { opacity: 0.95;");
+    expect(html).toContain('.controls button::before { content: "";');
+    expect(html).toContain("[data-prev]::before { border-right: 24px solid #0f172a;");
+    expect(html).toContain("[data-next]::before { border-left: 24px solid #0f172a;");
+    expect(html).toContain('<button type="button" data-prev aria-label="Previous slide"></button>');
+    expect(html).toContain('<button type="button" data-next aria-label="Next slide"></button>');
+    expect(html).not.toContain(">Previous</button>");
+    expect(html).not.toContain(">Next</button>");
     for (const chart of chartData.charts) {
       expect(html).toContain(`data-chart-id="${chart.chartId}"`);
     }

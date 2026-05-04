@@ -103,7 +103,11 @@ export function renderRevealReportHtml(input: RenderInput): string {
     .kpi-change-percent { flex: 0 0 auto; font-size: 12px; font-weight: 700; }
     .controls { position: fixed; top: 50%; left: 0; right: 0; z-index: 20; display: flex; align-items: center; justify-content: space-between; padding: 0 14px; pointer-events: none; transform: translateY(-50%); }
     .progress { position: fixed; left: 50%; bottom: 16px; z-index: 20; transform: translateX(-50%); border: 1px solid #e2e8f0; border-radius: 999px; background: rgba(255, 255, 255, 0.92); padding: 6px 12px; color: #475569; font-size: 13px; font-weight: 700; box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08); }
-    button { min-height: 44px; border: 1px solid #cbd5e1; border-radius: 999px; background: rgba(255, 255, 255, 0.92); padding: 0 14px; font: inherit; font-weight: 700; color: #0f172a; box-shadow: 0 8px 18px rgba(15, 23, 42, 0.1); pointer-events: auto; }
+    .controls button { width: 44px; height: 44px; border: 0; background: transparent; opacity: 0.45; padding: 0; pointer-events: auto; transition: opacity 160ms ease; }
+    .controls button:hover, .controls button:focus-visible { opacity: 0.95; outline: none; }
+    .controls button::before { content: ""; display: block; width: 0; height: 0; margin: 0 auto; border-top: 18px solid transparent; border-bottom: 18px solid transparent; }
+    [data-prev]::before { border-right: 24px solid #0f172a; }
+    [data-next]::before { border-left: 24px solid #0f172a; }
     @media print { .controls, .progress { display: none; } .reveal section { display: block; break-after: page; min-height: 100vh; } }
   </style>
 </head>
@@ -113,8 +117,8 @@ export function renderRevealReportHtml(input: RenderInput): string {
       ${slides.join("\n      ")}
     </div>
     <div class="controls">
-      <button type="button" data-prev>Previous</button>
-      <button type="button" data-next>Next</button>
+      <button type="button" data-prev aria-label="Previous slide"></button>
+      <button type="button" data-next aria-label="Next slide"></button>
     </div>
     <span class="progress" data-progress>1 / ${slides.length}</span>
   </div>
