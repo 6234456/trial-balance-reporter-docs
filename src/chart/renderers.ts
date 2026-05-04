@@ -39,6 +39,8 @@ export function renderChart(container: HTMLElement, chart: ChartSpec, options: C
     renderWaterfall(svg, width, height, chart, options, tooltip);
   } else if (chart.chartType === "composition") {
     renderComposition(svg, width, height, chart, options, tooltip);
+  } else if (chart.chartType === "paired-stacked-bar") {
+    renderPairedStackedBars(svg, width, height, chart, options, tooltip);
   } else if (chart.chartType === "working-capital") {
     renderWorkingCapital(svg, width, height, chart, options, tooltip);
   }
@@ -173,6 +175,110 @@ function renderComposition(
   const dataByPeriod = chart.data as Record<string, Array<{ label: string; amount: number }>>;
   const latestDate = Object.keys(dataByPeriod).sort().at(-1) ?? "";
   renderBars(svg, width, height, dataByPeriod[latestDate] ?? [], options.amountScale, tooltip);
+}
+
+function renderPairedStackedBars(
+  svg: d3.Selection<SVGSVGElement, unknown, null, undefined>,
+  width: number,
+  height: number,
+  chart: ChartSpec,
+  options: ChartRenderOptions,
+  tooltip: HTMLDivElement,
+): void {
+  const dataByPeriod = chart.data as Record<
+    string,
+    Array<{
+      group: string;
+      label: string;
+      segments: Array<{ lineId: string; label: string; amount: number }>;
+    }>
+  >;
+  const latestDate = Object.keys(dataByPeriod).sort().at(-1) ?? "";
+  const groups = dataByPeriod[latestDate] ?? [];
+  const margin = { top: 24, right: 190, bottom: 48, left: 72 };
+  const totals = groups.map((group) => d3.sum(group.segments, (segment) => Math.max(0, segment.amount)));
+  const x = d3
+    .scaleBand()
+    .domain(groups.map((group) => group.label))
+    .range([margin.left, width - margin.right])
+    .padding(0.42);
+  const y = d3
+    .scaleLinear()
+    .domain([0, d3.max(totals) ?? 0])
+    .nice()
+    .range([height - margin.bottom, margin.top]);
+  const colorByLineId = new Map<string, string>();
+
+  chart.sourceLineIds.forEach((lineId, index) => {
+    colorByLineId.set(lineId, palette[index % palette.length] ?? "#0f766e");
+  });
+
+  drawAxes(svg, x, y, width, height, margin, options.amountScale);
+
+  const groupLayer = svg.append("g");
+
+  groups.forEach((group) => {
+    const xPosition = x(group.label) ?? margin.left;
+    let cumulative = 0;
+
+    group.segments.forEach((segment) => {
+      const start = cumulative;
+      const end = cumulative + Math.max(0, segment.amount);
+      cumulative = end;
+
+      groupLayer
+        .append("rect")
+        .attr("x", xPosition)
+        .attr("y", y(end))
+        .attr("width", x.bandwidth())
+        .attr("height", Math.max(1, y(start) - y(end)))
+        .attr("rx", 4)
+        .attr("fill", colorByLineId.get(segment.lineId) ?? "#0f766e")
+        .attr("stroke", "#ffffff")
+        .attr("stroke-width", 1)
+        .each(function addTooltip() {
+          if (this instanceof Element) {
+            attachTooltip(
+              this,
+              tooltip,
+              `${group.label} / ${segment.label}: ${formatAmount(segment.amount, options.amountScale)}`,
+            );
+          }
+        });
+    });
+
+    svg
+      .append("text")
+      .attr("x", xPosition + x.bandwidth() / 2)
+      .attr("y", y(cumulative) - 8)
+      .attr("text-anchor", "middle")
+      .attr("font-size", 12)
+      .attr("font-weight", 700)
+      .attr("fill", "#0f172a")
+      .text(formatAmount(cumulative, options.amountScale));
+  });
+
+  const legend = svg.append("g").attr("transform", `translate(${width - margin.right + 18},${margin.top})`);
+  chart.sourceLineIds.forEach((lineId, index) => {
+    const segment = groups.flatMap((group) => group.segments).find((candidate) => candidate.lineId === lineId);
+    const yPosition = index * 18;
+
+    legend
+      .append("rect")
+      .attr("x", 0)
+      .attr("y", yPosition)
+      .attr("width", 10)
+      .attr("height", 10)
+      .attr("rx", 2)
+      .attr("fill", colorByLineId.get(lineId) ?? "#0f766e");
+    legend
+      .append("text")
+      .attr("x", 16)
+      .attr("y", yPosition + 9)
+      .attr("font-size", 10)
+      .attr("fill", "#475569")
+      .text(segment?.label ?? lineId);
+  });
 }
 
 function renderWorkingCapital(

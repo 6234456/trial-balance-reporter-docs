@@ -72,10 +72,10 @@ describe("App", () => {
     expect(host.querySelectorAll(".statement-table-scroll")).toHaveLength(2);
     expect(host.querySelector(".chart-section")).toBeTruthy();
 
-    await waitForCondition(() => host.querySelectorAll(".chart-tooltip").length >= 7, "chart tooltip layers to render");
+    await waitForCondition(() => host.querySelectorAll(".chart-tooltip").length >= 6, "chart tooltip layers to render");
     await waitForCondition(() => host.querySelectorAll("svg").length >= 4, "svg charts to render");
 
-    expect(host.querySelectorAll(".chart-tooltip").length).toBeGreaterThanOrEqual(7);
+    expect(host.querySelectorAll(".chart-tooltip").length).toBeGreaterThanOrEqual(6);
     expect(host.querySelectorAll("[data-tooltip]").length).toBeGreaterThanOrEqual(8);
     expect(host.querySelector("svg")).toBeTruthy();
 

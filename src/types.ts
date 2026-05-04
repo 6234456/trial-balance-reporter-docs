@@ -147,6 +147,7 @@ export type ChartSpec = {
     | "trend-line"
     | "waterfall"
     | "composition"
+    | "paired-stacked-bar"
     | "working-capital"
     | "diagnostics-summary";
   title: LocalizedText;

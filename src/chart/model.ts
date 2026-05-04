@@ -8,19 +8,7 @@ export function buildChartDataModel(statement: StatementModel, diagnostics: Diag
       buildKpiSummary(statement),
       buildPlTrend(statement),
       buildPlWaterfall(statement),
-      buildComposition(statement, "assets-composition", "Assets Composition", "资产构成", [
-        "BS_CASH",
-        "BS_AR",
-        "BS_INVENTORY",
-        "BS_PPE",
-      ]),
-      buildComposition(
-        statement,
-        "liabilities-equity-composition",
-        "Liabilities & Equity Composition",
-        "负债与权益构成",
-        ["BS_AP", "BS_LOANS", "BS_SHARE_CAPITAL", "BS_RETAINED_EARNINGS", "BS_CURRENT_RESULT"],
-      ),
+      buildBalanceComposition(statement),
       buildWorkingCapital(statement),
       buildDiagnosticsSummary(diagnostics),
     ],
@@ -107,32 +95,46 @@ function buildPlWaterfall(statement: StatementModel): ChartSpec {
   };
 }
 
-function buildComposition(
-  statement: StatementModel,
-  chartId: string,
-  titleEn: string,
-  titleZh: string,
-  lineIds: string[],
-): ChartSpec {
+function buildBalanceComposition(statement: StatementModel): ChartSpec {
+  const assets = ["BS_CASH", "BS_AR", "BS_INVENTORY", "BS_PPE"];
+  const liabilitiesAndEquity = ["BS_AP", "BS_LOANS", "BS_SHARE_CAPITAL", "BS_RETAINED_EARNINGS", "BS_CURRENT_RESULT"];
+  const lineIds = [...assets, ...liabilitiesAndEquity];
+
   return {
-    chartId,
-    chartType: "composition",
-    title: { en: titleEn, zh: titleZh },
+    chartId: "balance-composition",
+    chartType: "paired-stacked-bar",
+    title: { en: "Assets vs Liabilities & Equity Composition", zh: "资产与负债权益构成" },
     sourceLineIds: lineIds,
     data: Object.fromEntries(
       statement.periods.map((period) => [
         period.reportingDate,
-        lineIds.map((lineId) => {
-          const line = statement.statements.balanceSheet.linesById[lineId];
-          return {
-            lineId,
-            label: line?.label.en ?? lineId,
-            amount: amount(line, period.reportingDate, "presentationAmount"),
-          };
-        }),
+        [
+          {
+            group: "Assets",
+            label: "Assets",
+            segments: buildStackSegments(statement, assets, period.reportingDate),
+          },
+          {
+            group: "Liabilities & Equity",
+            label: "Liabilities & Equity",
+            segments: buildStackSegments(statement, liabilitiesAndEquity, period.reportingDate),
+          },
+        ],
       ]),
     ),
   };
+}
+
+function buildStackSegments(statement: StatementModel, lineIds: string[], period: string) {
+  return lineIds.map((lineId) => {
+    const line = statement.statements.balanceSheet.linesById[lineId];
+
+    return {
+      lineId,
+      label: line?.label.en ?? lineId,
+      amount: amount(line, period, "presentationAmount"),
+    };
+  });
 }
 
 function buildWorkingCapital(statement: StatementModel): ChartSpec {

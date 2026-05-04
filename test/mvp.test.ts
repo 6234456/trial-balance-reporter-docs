@@ -60,10 +60,30 @@ describe("MVP reporting pipeline", () => {
       "kpi-summary",
       "pl-trend",
       "pl-waterfall",
-      "assets-composition",
-      "liabilities-equity-composition",
+      "balance-composition",
       "working-capital",
       "diagnostics-summary",
+    ]);
+    expect(chartData.charts.find((chart) => chart.chartId === "balance-composition")).toMatchObject({
+      chartType: "paired-stacked-bar",
+      title: {
+        en: "Assets vs Liabilities & Equity Composition",
+        zh: "资产与负债权益构成",
+      },
+    });
+    expect(
+      (
+        chartData.charts.find((chart) => chart.chartId === "balance-composition")?.data as Record<
+          string,
+          Array<{ group: string; segments: unknown[] }>
+        >
+      )["2025-12-31"],
+    ).toMatchObject([
+      { group: "Assets", segments: expect.arrayContaining([expect.objectContaining({ lineId: "BS_CASH" })]) },
+      {
+        group: "Liabilities & Equity",
+        segments: expect.arrayContaining([expect.objectContaining({ lineId: "BS_CURRENT_RESULT" })]),
+      },
     ]);
   });
 

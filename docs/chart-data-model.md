@@ -16,10 +16,9 @@ The standard finance pack SHOULD include:
 1. KPI cards
 2. Revenue / gross profit / net income trend
 3. P&L waterfall
-4. Assets composition
-5. Liabilities and equity composition
-6. Working capital chart
-7. Diagnostics summary
+4. Assets vs liabilities and equity composition as two parallel vertical stacked bars
+5. Working capital chart
+6. Diagnostics summary
 
 ## D3 Rendering Rules
 
