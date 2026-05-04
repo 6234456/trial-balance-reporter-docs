@@ -63,9 +63,9 @@ export function renderRevealReportHtml(input: RenderInput): string {
   <style>
     :root { color-scheme: light; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f8fafc; color: #0f172a; }
     body { margin: 0; background: #f8fafc; }
-    .reveal { min-height: 100vh; display: grid; grid-template-rows: 1fr auto; }
-    .slides { min-height: calc(100vh - 64px); display: grid; }
-    .reveal section { display: none; min-height: calc(100vh - 64px); padding: 42px 56px; box-sizing: border-box; }
+    .reveal { min-height: 100vh; }
+    .slides { min-height: 100vh; display: grid; }
+    .reveal section { display: none; min-height: 100vh; padding: 42px 72px; box-sizing: border-box; }
     .reveal section.active { display: grid; align-content: center; gap: 20px; }
     h1, h2 { margin: 0; line-height: 1.05; letter-spacing: 0; }
     h1 { font-size: clamp(40px, 7vw, 84px); max-width: 920px; }
@@ -101,9 +101,10 @@ export function renderRevealReportHtml(input: RenderInput): string {
     .kpi-change { display: flex; min-width: 0; align-items: flex-end; justify-content: space-between; gap: 8px; margin-top: 12px; border-top: 1px solid #f1f5f9; padding-top: 8px; font-variant-numeric: tabular-nums; }
     .kpi-change-absolute { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 20px; font-weight: 700; }
     .kpi-change-percent { flex: 0 0 auto; font-size: 12px; font-weight: 700; }
-    .controls { display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid #e2e8f0; padding: 14px 18px; background: white; }
-    button { min-height: 40px; border: 1px solid #cbd5e1; border-radius: 6px; background: white; padding: 0 12px; font: inherit; }
-    @media print { .controls { display: none; } .reveal section { display: block; break-after: page; min-height: 100vh; } }
+    .controls { position: fixed; top: 50%; left: 0; right: 0; z-index: 20; display: flex; align-items: center; justify-content: space-between; padding: 0 14px; pointer-events: none; transform: translateY(-50%); }
+    .progress { position: fixed; left: 50%; bottom: 16px; z-index: 20; transform: translateX(-50%); border: 1px solid #e2e8f0; border-radius: 999px; background: rgba(255, 255, 255, 0.92); padding: 6px 12px; color: #475569; font-size: 13px; font-weight: 700; box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08); }
+    button { min-height: 44px; border: 1px solid #cbd5e1; border-radius: 999px; background: rgba(255, 255, 255, 0.92); padding: 0 14px; font: inherit; font-weight: 700; color: #0f172a; box-shadow: 0 8px 18px rgba(15, 23, 42, 0.1); pointer-events: auto; }
+    @media print { .controls, .progress { display: none; } .reveal section { display: block; break-after: page; min-height: 100vh; } }
   </style>
 </head>
 <body>
@@ -113,9 +114,9 @@ export function renderRevealReportHtml(input: RenderInput): string {
     </div>
     <div class="controls">
       <button type="button" data-prev>Previous</button>
-      <span data-progress>1 / ${slides.length}</span>
       <button type="button" data-next>Next</button>
     </div>
+    <span class="progress" data-progress>1 / ${slides.length}</span>
   </div>
   <script>
     window.__REPORT_DATA__ = ${payload};

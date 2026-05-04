@@ -120,6 +120,10 @@ describe("MVP reporting pipeline", () => {
     expect(html).toContain(".report-table th, .report-table td {");
     expect(html).toContain("font-size: 19.5px;");
     expect(html).toContain("line-height: 1.8;");
+    expect(html).toContain(".controls { position: fixed; top: 50%;");
+    expect(html).toContain("transform: translateY(-50%);");
+    expect(html).toContain(".progress { position: fixed; left: 50%; bottom: 16px;");
+    expect(html).not.toContain("grid-template-rows: 1fr auto");
     for (const chart of chartData.charts) {
       expect(html).toContain(`data-chart-id="${chart.chartId}"`);
     }
