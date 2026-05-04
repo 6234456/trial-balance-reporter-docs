@@ -367,15 +367,14 @@ function renderWorkingCapital(
     .scalePoint()
     .domain(data.map((item) => item.label))
     .range([margin.left, width - margin.right]);
-  const extent = d3.extent(data, (item) => item.amount);
   const y = d3
     .scaleLinear()
-    .domain([Math.min(0, extent[0] ?? 0), Math.max(0, extent[1] ?? 0)])
-    .nice()
+    .domain(buildWorkingCapitalDomain(data.map((item) => item.amount)))
     .range([height - margin.bottom, margin.top]);
   const points = data.map((item) => ({ x: x(item.label) ?? margin.left, y: y(item.amount) }));
   const line = d3
     .line<{ x: number; y: number }>()
+    .curve(d3.curveMonotoneX)
     .x((point) => point.x)
     .y((point) => point.y);
 
@@ -451,6 +450,21 @@ function calculatePointHitboxWidth(points: number[], minX: number, maxX: number)
 
 function centeredHitboxX(center: number, width: number, minX: number, maxX: number): number {
   return Math.max(minX, Math.min(center - width / 2, maxX - width));
+}
+
+function buildWorkingCapitalDomain(values: number[]): [number, number] {
+  if (values.length === 0) {
+    return [0, 1];
+  }
+
+  const minValue = d3.min(values) ?? 0;
+  const maxValue = d3.max(values) ?? 0;
+  const spread = maxValue - minValue;
+  const rangeBase = spread > 0 ? spread : Math.max(Math.abs(maxValue), 1);
+  const lowerBound = Math.max(0, minValue - rangeBase * 0.05);
+  const upperBound = maxValue + rangeBase * 0.03;
+
+  return [lowerBound, upperBound];
 }
 
 function renderBars(

@@ -165,28 +165,34 @@ describe("MVP reporting pipeline", () => {
     expect(mergedTooltips[0]?.getAttribute("data-tooltip")).toContain("Net Income");
   });
 
-  it("renders working capital as an angled line instead of bars or horizontal steps", () => {
-    const parsed = loadFixture("sample-valid");
-    const statement = buildStatementModel(parsed);
-    const chartData = buildChartDataModel(statement, parsed.diagnostics);
-    const chart = chartData.charts.find((item) => item.chartId === "working-capital");
+  it("renders working capital as a smooth line with padded non-negative range", () => {
+    const chart: ChartSpec = {
+      chartId: "working-capital",
+      chartType: "working-capital",
+      title: { en: "Working Capital", zh: "营运资本" },
+      sourceLineIds: ["BS_WORKING_CAPITAL"],
+      data: [
+        { reportingDate: "2025-03-31", workingCapital: 2 },
+        { reportingDate: "2025-06-30", workingCapital: 52 },
+        { reportingDate: "2025-09-30", workingCapital: 102 },
+      ],
+    };
     const host = document.createElement("div");
     Object.defineProperty(host, "clientWidth", { configurable: true, value: 720 });
 
-    if (!chart) {
-      throw new Error("working-capital chart not found");
-    }
-
-    renderChart(host, chart, { amountScale: "thousand", plViewMode: "ytd" });
+    renderChart(host, chart, { amountScale: "raw", plViewMode: "ytd" });
 
     const workingCapitalLine = host.querySelector(".working-capital-line");
     const pathData = workingCapitalLine?.getAttribute("d") ?? "";
+    const markers = [...host.querySelectorAll(".working-capital-marker")];
     expect(workingCapitalLine).toBeTruthy();
-    expect(pathData).toContain("L");
+    expect(pathData).toContain("C");
     expect(pathData).not.toMatch(/[HV]/);
     expect(host.querySelector(".working-capital-step-line")).toBeNull();
     expect(host.querySelector("rect:not(.working-capital-hitbox)")).toBeNull();
-    expect(host.querySelectorAll(".working-capital-hitbox[data-tooltip]")).toHaveLength(statement.periods.length);
+    expect(markers[0]?.getAttribute("cy")).toBeCloseTo(239.7, 1);
+    expect(markers[2]?.getAttribute("cy")).toBeCloseTo(26.4, 1);
+    expect(host.querySelectorAll(".working-capital-hitbox[data-tooltip]")).toHaveLength(3);
   });
 
   it("renders KPI cards with icons and prior-period movement", () => {
