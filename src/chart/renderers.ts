@@ -285,13 +285,15 @@ function renderPairedStackedBars(
 
   const groupLayer = svg.append("g");
 
-  groups.forEach((group) => {
+  groups.forEach((group, groupIndex) => {
     const xPosition = x(group.label) ?? margin.left;
     let cumulative = 0;
+    const largestSegment = findLargestStackSegment(group.segments);
 
     group.segments.forEach((segment) => {
       const start = cumulative;
-      const end = cumulative + Math.max(0, segment.amount);
+      const amount = Math.max(0, segment.amount);
+      const end = cumulative + amount;
       cumulative = end;
 
       groupLayer
@@ -314,6 +316,29 @@ function renderPairedStackedBars(
           }
         });
     });
+
+    if (largestSegment && largestSegment.amount > 0) {
+      const horizontalBias = groupIndex === 0 ? "left" : "right";
+      const labelXOffset = x.bandwidth() * (horizontalBias === "left" ? -0.14 : 0.14);
+
+      svg
+        .append("text")
+        .attr("class", "paired-largest-segment-label")
+        .attr("data-group", group.group)
+        .attr("data-horizontal-bias", horizontalBias)
+        .attr("x", xPosition + x.bandwidth() / 2 + labelXOffset)
+        .attr("y", y((largestSegment.start + largestSegment.end) / 2))
+        .attr("text-anchor", "middle")
+        .attr("dominant-baseline", "middle")
+        .attr("font-size", 11)
+        .attr("font-weight", 700)
+        .attr("fill", "#ffffff")
+        .attr("stroke", "#0f172a")
+        .attr("stroke-width", 2.5)
+        .attr("paint-order", "stroke")
+        .attr("pointer-events", "none")
+        .text(largestSegment.label);
+    }
 
     svg
       .append("text")
@@ -347,6 +372,26 @@ function renderPairedStackedBars(
       .attr("fill", "#475569")
       .text(segment?.label ?? lineId);
   });
+}
+
+function findLargestStackSegment(
+  segments: Array<{ label: string; amount: number }>,
+): { label: string; amount: number; start: number; end: number } | null {
+  let cumulative = 0;
+  let largestSegment: { label: string; amount: number; start: number; end: number } | null = null;
+
+  for (const segment of segments) {
+    const start = cumulative;
+    const amount = Math.max(0, segment.amount);
+    const end = cumulative + amount;
+    cumulative = end;
+
+    if (!largestSegment || amount > largestSegment.amount) {
+      largestSegment = { label: segment.label, amount, start, end };
+    }
+  }
+
+  return largestSegment;
 }
 
 function renderWorkingCapital(
@@ -518,12 +563,14 @@ function drawAxes(
 ): void {
   svg
     .append("g")
+    .attr("class", "x-axis")
     .attr("transform", `translate(0,${height - margin.bottom})`)
     .call(d3.axisBottom(x).tickSizeOuter(0))
     .call((group) => group.selectAll("text").attr("font-size", 11));
 
   svg
     .append("g")
+    .attr("class", "y-axis")
     .attr("transform", `translate(${margin.left},0)`)
     .call(d3.axisLeft(y).ticks(5).tickFormat((value) => formatAmount(Number(value), amountScale)))
     .call((group) => group.selectAll("text").attr("font-size", 11))

@@ -165,6 +165,38 @@ describe("MVP reporting pipeline", () => {
     expect(mergedTooltips[0]?.getAttribute("data-tooltip")).toContain("Net Income");
   });
 
+  it("renders balance composition with left ticks and labels on each largest segment", () => {
+    const parsed = loadFixture("sample-valid");
+    const statement = buildStatementModel(parsed);
+    const chartData = buildChartDataModel(statement, parsed.diagnostics);
+    const chart = chartData.charts.find((item) => item.chartId === "balance-composition");
+    const host = document.createElement("div");
+    Object.defineProperty(host, "clientWidth", { configurable: true, value: 720 });
+
+    if (!chart) {
+      throw new Error("balance-composition chart not found");
+    }
+
+    renderChart(host, chart, { amountScale: "thousand", plViewMode: "ytd" });
+
+    const yAxis = host.querySelector(".y-axis");
+    const labels = [...host.querySelectorAll(".paired-largest-segment-label")];
+    const assetsLabel = labels.find((label) => label.getAttribute("data-group") === "Assets");
+    const liabilitiesLabel = labels.find((label) => label.getAttribute("data-group") === "Liabilities & Equity");
+
+    expect(yAxis).toBeTruthy();
+    expect(yAxis?.getAttribute("transform")).toBe("translate(72,0)");
+    expect(yAxis?.querySelectorAll(".tick text").length).toBeGreaterThan(0);
+    expect(labels).toHaveLength(2);
+    expect(assetsLabel?.textContent).toContain("Property, plant and equipment");
+    expect(assetsLabel?.getAttribute("data-horizontal-bias")).toBe("left");
+    expect(liabilitiesLabel?.textContent).toContain("Retained earnings");
+    expect(liabilitiesLabel?.getAttribute("data-horizontal-bias")).toBe("right");
+    expect(assetsLabel?.getAttribute("text-anchor")).toBe("middle");
+    expect(liabilitiesLabel?.getAttribute("text-anchor")).toBe("middle");
+    expect(Number(assetsLabel?.getAttribute("x"))).toBeLessThan(Number(liabilitiesLabel?.getAttribute("x")));
+  });
+
   it("renders working capital as a smooth line with padded non-negative range", () => {
     const chart: ChartSpec = {
       chartId: "working-capital",
