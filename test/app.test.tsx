@@ -70,6 +70,11 @@ describe("App", () => {
     expect(host.textContent).toContain("Export Reveal HTML");
     expect(host.querySelectorAll(".statement-table-card")).toHaveLength(2);
     expect(host.querySelectorAll(".statement-table-scroll")).toHaveLength(2);
+    for (const tableScroll of host.querySelectorAll(".statement-table-scroll")) {
+      expect(tableScroll.className).toContain("overflow-x-auto");
+      expect(tableScroll.className).not.toContain("overflow-auto");
+      expect(tableScroll.className).not.toContain("max-h");
+    }
     expect(host.querySelector(".chart-section")).toBeTruthy();
 
     await waitForCondition(() => host.querySelectorAll(".chart-tooltip").length >= 6, "chart tooltip layers to render");

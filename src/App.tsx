@@ -491,7 +491,7 @@ function StatementTable({
         <h3 className="text-base font-semibold text-slate-950">{title}</h3>
         <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">{periods.length} periods</span>
       </div>
-      <div className="statement-table-scroll max-h-[520px] overflow-auto">
+      <div className="statement-table-scroll overflow-x-auto">
         <table className="min-w-[920px] table-fixed text-sm">
           <thead className="sticky top-0 z-10 bg-slate-100 text-slate-600 shadow-sm">
             <tr>
