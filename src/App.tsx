@@ -549,11 +549,11 @@ function ChartPreview({
   plViewMode: PlViewMode;
 }) {
   return (
-    <section className="chart-section rounded-xl border border-emerald-900/20 bg-[linear-gradient(135deg,#0f2f2b_0%,#123b36_52%,#4a3422_100%)] p-5 shadow-sm">
+    <section className="chart-section rounded-xl border border-slate-200 p-5 shadow-sm">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h2 className="text-lg font-semibold text-white">D3 Charts</h2>
-          <p className="mt-1 text-sm leading-6 text-emerald-50/80">
+          <h2 className="text-lg font-semibold text-slate-950">D3 Charts</h2>
+          <p className="mt-1 text-sm leading-6 text-slate-600">
             Hover or focus any mark, KPI, or diagnostic tile to inspect the value behind it.
           </p>
         </div>

@@ -75,7 +75,9 @@ describe("App", () => {
       expect(tableScroll.className).not.toContain("overflow-auto");
       expect(tableScroll.className).not.toContain("max-h");
     }
-    expect(host.querySelector(".chart-section")).toBeTruthy();
+    const chartSection = host.querySelector(".chart-section");
+    expect(chartSection).toBeTruthy();
+    expect(chartSection?.className).not.toContain("bg-");
 
     await waitForCondition(() => host.querySelectorAll(".chart-tooltip").length >= 6, "chart tooltip layers to render");
     await waitForCondition(() => host.querySelectorAll("svg").length >= 4, "svg charts to render");
