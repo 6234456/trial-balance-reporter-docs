@@ -28,6 +28,8 @@ describe("App", () => {
     expect(html).toContain("All Excel processing stays in your browser");
     expect(html).toContain("Load Demo");
     expect(html).toContain("Upload Excel");
+    expect(html).toContain("Download Demo Spreadsheet");
+    expect(html).toContain("Download Warning Spreadsheet");
     expect(html).toContain("Upload");
     expect(html).toContain("Validate");
     expect(html).toContain("Configure");
@@ -66,6 +68,15 @@ describe("App", () => {
     expect(host.textContent).toContain("D3 Charts");
     expect(host.textContent).toContain("Executive KPIs");
     expect(host.textContent).toContain("Export Reveal HTML");
+    expect(host.querySelectorAll(".statement-table-card")).toHaveLength(2);
+    expect(host.querySelectorAll(".statement-table-scroll")).toHaveLength(2);
+    expect(host.querySelector(".chart-section")).toBeTruthy();
+
+    await waitForCondition(() => host.querySelectorAll(".chart-tooltip").length >= 7, "chart tooltip layers to render");
+    await waitForCondition(() => host.querySelectorAll("svg").length >= 4, "svg charts to render");
+
+    expect(host.querySelectorAll(".chart-tooltip").length).toBeGreaterThanOrEqual(7);
+    expect(host.querySelectorAll("[data-tooltip]").length).toBeGreaterThanOrEqual(8);
     expect(host.querySelector("svg")).toBeTruthy();
 
     root.unmount();
@@ -74,8 +85,12 @@ describe("App", () => {
 });
 
 async function waitForText(element: HTMLElement, text: string): Promise<void> {
+  await waitForCondition(() => Boolean(element.textContent?.includes(text)), `text: ${text}`);
+}
+
+async function waitForCondition(predicate: () => boolean, label: string): Promise<void> {
   for (let attempt = 0; attempt < 20; attempt += 1) {
-    if (element.textContent?.includes(text)) {
+    if (predicate()) {
       return;
     }
     await act(async () => {
@@ -83,5 +98,5 @@ async function waitForText(element: HTMLElement, text: string): Promise<void> {
     });
   }
 
-  throw new Error(`Timed out waiting for text: ${text}`);
+  throw new Error(`Timed out waiting for ${label}`);
 }

@@ -7,18 +7,19 @@ export type ChartRenderOptions = {
   plViewMode: "ytd" | "period_activity";
 };
 
-const palette = ["#0f766e", "#334155", "#2563eb", "#c2410c", "#7c3aed", "#475569"];
+const palette = ["#0f766e", "#6d5bd0", "#f59e0b", "#e11d48", "#2563eb", "#14b8a6"];
 
 export function renderChart(container: HTMLElement, chart: ChartSpec, options: ChartRenderOptions): void {
   container.replaceChildren();
+  const tooltip = createTooltip(container);
 
   if (chart.chartType === "kpi-cards") {
-    renderKpis(container, chart, options);
+    renderKpis(container, chart, options, tooltip);
     return;
   }
 
   if (chart.chartType === "diagnostics-summary") {
-    renderDiagnostics(container, chart);
+    renderDiagnostics(container, chart, tooltip);
     return;
   }
 
@@ -33,17 +34,17 @@ export function renderChart(container: HTMLElement, chart: ChartSpec, options: C
     .attr("class", "h-full w-full overflow-visible");
 
   if (chart.chartType === "trend-line") {
-    renderTrend(svg, width, height, chart, options);
+    renderTrend(svg, width, height, chart, options, tooltip);
   } else if (chart.chartType === "waterfall") {
-    renderWaterfall(svg, width, height, chart, options);
+    renderWaterfall(svg, width, height, chart, options, tooltip);
   } else if (chart.chartType === "composition") {
-    renderComposition(svg, width, height, chart, options);
+    renderComposition(svg, width, height, chart, options, tooltip);
   } else if (chart.chartType === "working-capital") {
-    renderWorkingCapital(svg, width, height, chart, options);
+    renderWorkingCapital(svg, width, height, chart, options, tooltip);
   }
 }
 
-function renderKpis(container: HTMLElement, chart: ChartSpec, options: ChartRenderOptions): void {
+function renderKpis(container: HTMLElement, chart: ChartSpec, options: ChartRenderOptions, tooltip: HTMLDivElement): void {
   const data = chart.data as Record<string, Record<string, number>>;
   const latestDate = Object.keys(data).sort().at(-1);
   const latest: Record<string, number> = latestDate ? (data[latestDate] ?? {}) : {};
@@ -60,7 +61,8 @@ function renderKpis(container: HTMLElement, chart: ChartSpec, options: ChartRend
 
   for (const [label, value] of items) {
     const card = document.createElement("div");
-    card.className = "rounded-md border border-slate-200 bg-white p-4";
+    card.className = "rounded-md border border-slate-200 bg-white p-4 shadow-sm outline-none focus:ring-2 focus:ring-teal-500";
+    attachTooltip(card, tooltip, `${label}: ${formatAmount(value, options.amountScale)}`);
     card.innerHTML = `<div class="text-xs font-semibold uppercase tracking-wide text-slate-500">${label}</div><div class="mt-2 text-2xl font-semibold text-slate-950">${formatAmount(value, options.amountScale)}</div>`;
     wrapper.append(card);
   }
@@ -68,14 +70,15 @@ function renderKpis(container: HTMLElement, chart: ChartSpec, options: ChartRend
   container.append(wrapper);
 }
 
-function renderDiagnostics(container: HTMLElement, chart: ChartSpec): void {
+function renderDiagnostics(container: HTMLElement, chart: ChartSpec, tooltip: HTMLDivElement): void {
   const data = chart.data as Record<string, number>;
   const wrapper = document.createElement("div");
   wrapper.className = "grid gap-3 sm:grid-cols-3";
 
   for (const key of ["blocking", "warning", "info"]) {
     const card = document.createElement("div");
-    card.className = "rounded-md border border-slate-200 bg-white p-4";
+    card.className = "rounded-md border border-slate-200 bg-white p-4 shadow-sm outline-none focus:ring-2 focus:ring-teal-500";
+    attachTooltip(card, tooltip, `${key}: ${data[key] ?? 0}`);
     card.innerHTML = `<div class="text-xs font-semibold uppercase tracking-wide text-slate-500">${key}</div><div class="mt-2 text-3xl font-semibold text-slate-950">${data[key] ?? 0}</div>`;
     wrapper.append(card);
   }
@@ -89,6 +92,7 @@ function renderTrend(
   height: number,
   chart: ChartSpec,
   options: ChartRenderOptions,
+  tooltip: HTMLDivElement,
 ): void {
   const data = chart.data as Array<{
     reportingDate: string;
@@ -134,8 +138,13 @@ function renderTrend(
       .attr("cy", (item) => y(item[key]))
       .attr("r", 4)
       .attr("fill", color)
-      .append("title")
-      .text((item) => `${item.series} ${item.reportingDate}: ${formatAmount(item[key], options.amountScale)}`);
+      .attr("stroke", "#ffffff")
+      .attr("stroke-width", 1.5)
+      .each(function addTooltip(item) {
+        if (this instanceof Element) {
+          attachTooltip(this, tooltip, `${item.series} ${item.reportingDate}: ${formatAmount(item[key], options.amountScale)}`);
+        }
+      });
   });
 }
 
@@ -145,11 +154,12 @@ function renderWaterfall(
   height: number,
   chart: ChartSpec,
   options: ChartRenderOptions,
+  tooltip: HTMLDivElement,
 ): void {
   const dataByPeriod = chart.data as Record<string, Array<{ label: string; amount: number; isTotal?: boolean }>>;
   const latestDate = Object.keys(dataByPeriod).sort().at(-1) ?? "";
   const data = dataByPeriod[latestDate] ?? [];
-  renderBars(svg, width, height, data.map((item) => ({ label: item.label, amount: item.amount })), options.amountScale);
+  renderBars(svg, width, height, data.map((item) => ({ label: item.label, amount: item.amount })), options.amountScale, tooltip);
 }
 
 function renderComposition(
@@ -158,10 +168,11 @@ function renderComposition(
   height: number,
   chart: ChartSpec,
   options: ChartRenderOptions,
+  tooltip: HTMLDivElement,
 ): void {
   const dataByPeriod = chart.data as Record<string, Array<{ label: string; amount: number }>>;
   const latestDate = Object.keys(dataByPeriod).sort().at(-1) ?? "";
-  renderBars(svg, width, height, dataByPeriod[latestDate] ?? [], options.amountScale);
+  renderBars(svg, width, height, dataByPeriod[latestDate] ?? [], options.amountScale, tooltip);
 }
 
 function renderWorkingCapital(
@@ -170,6 +181,7 @@ function renderWorkingCapital(
   height: number,
   chart: ChartSpec,
   options: ChartRenderOptions,
+  tooltip: HTMLDivElement,
 ): void {
   const data = chart.data as Array<{ reportingDate: string; workingCapital: number }>;
   renderBars(
@@ -178,6 +190,7 @@ function renderWorkingCapital(
     height,
     data.map((item) => ({ label: item.reportingDate.slice(5), amount: item.workingCapital })),
     options.amountScale,
+    tooltip,
   );
 }
 
@@ -187,6 +200,7 @@ function renderBars(
   height: number,
   data: Array<{ label: string; amount: number }>,
   amountScale: AmountScale,
+  tooltip: HTMLDivElement,
 ): void {
   const margin = { top: 20, right: 24, bottom: 56, left: 72 };
   const x = d3
@@ -212,9 +226,12 @@ function renderBars(
     .attr("width", x.bandwidth())
     .attr("height", (item) => Math.abs(y(item.amount) - y(0)))
     .attr("rx", 4)
-    .attr("fill", (item) => (item.amount < 0 ? "#c2410c" : "#0f766e"))
-    .append("title")
-    .text((item) => `${item.label}: ${formatAmount(item.amount, amountScale)}`);
+    .attr("fill", (item, index) => (item.amount < 0 ? "#e11d48" : (palette[index % palette.length] ?? "#0f766e")))
+    .each(function addTooltip(item) {
+      if (this instanceof Element) {
+        attachTooltip(this, tooltip, `${item.label}: ${formatAmount(item.amount, amountScale)}`);
+      }
+    });
 }
 
 function drawAxes(
@@ -258,4 +275,56 @@ export function formatAmount(value: number, scale: AmountScale): string {
 
 function cssClass(value: string): string {
   return value.toLowerCase().replaceAll(/[^a-z0-9]+/g, "-");
+}
+
+function createTooltip(container: HTMLElement): HTMLDivElement {
+  container.style.position = "relative";
+
+  const tooltip = document.createElement("div");
+  tooltip.className = "chart-tooltip";
+  tooltip.setAttribute("role", "tooltip");
+  tooltip.hidden = true;
+  container.append(tooltip);
+
+  return tooltip;
+}
+
+function attachTooltip(target: Element, tooltip: HTMLDivElement, text: string): void {
+  target.setAttribute("data-tooltip", text);
+  target.setAttribute("tabindex", "0");
+
+  const show = (event?: Event) => {
+    tooltip.textContent = text;
+    tooltip.hidden = false;
+    positionTooltip(target, tooltip, event);
+  };
+  const hide = () => {
+    tooltip.hidden = true;
+  };
+
+  target.addEventListener("pointerenter", show);
+  target.addEventListener("pointermove", show);
+  target.addEventListener("pointerleave", hide);
+  target.addEventListener("focus", show);
+  target.addEventListener("blur", hide);
+}
+
+function positionTooltip(target: Element, tooltip: HTMLDivElement, event?: Event): void {
+  const container = tooltip.parentElement;
+
+  if (!container) {
+    return;
+  }
+
+  const containerRect = container.getBoundingClientRect();
+
+  if (typeof PointerEvent !== "undefined" && event instanceof PointerEvent) {
+    tooltip.style.left = `${event.clientX - containerRect.left + 12}px`;
+    tooltip.style.top = `${event.clientY - containerRect.top + 12}px`;
+    return;
+  }
+
+  const targetRect = target.getBoundingClientRect();
+  tooltip.style.left = `${Math.max(8, targetRect.left - containerRect.left)}px`;
+  tooltip.style.top = `${Math.max(8, targetRect.top - containerRect.top - 34)}px`;
 }

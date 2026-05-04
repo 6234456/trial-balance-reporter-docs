@@ -48,4 +48,12 @@ select {
   .field-input {
     @apply min-h-10 w-full rounded-md border border-slate-300 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-teal-500 focus:ring-2 focus:ring-teal-100;
   }
+
+  .chart-tooltip {
+    @apply pointer-events-none absolute z-30 max-w-64 rounded-md border border-slate-200 bg-white px-3 py-2 text-xs font-medium leading-5 text-slate-800 shadow-lg;
+  }
+
+  .chart-tooltip[hidden] {
+    @apply hidden;
+  }
 }

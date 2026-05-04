@@ -148,10 +148,10 @@ export function App() {
           </div>
           <div className="flex flex-wrap gap-2">
             <a className="secondary-button" href="./examples/sample-valid.xlsx" download>
-              Download Sample
+              Download Demo Spreadsheet
             </a>
             <a className="secondary-button" href="./examples/sample-with-warnings.xlsx" download>
-              Download Warnings
+              Download Warning Spreadsheet
             </a>
           </div>
         </header>
@@ -261,6 +261,14 @@ function UploadPanel({
           disabled={isLoading}
           onChange={(event) => onUpload(event.currentTarget.files?.[0])}
         />
+        <div className="grid gap-2 border-t border-slate-200 pt-3">
+          <a className="secondary-button w-full" href="./examples/sample-valid.xlsx" download>
+            Download Demo Spreadsheet
+          </a>
+          <a className="secondary-button w-full" href="./examples/sample-with-warnings.xlsx" download>
+            Download Warning Spreadsheet
+          </a>
+        </div>
       </div>
     </section>
   );
@@ -436,8 +444,15 @@ function StatementPreview({
 }) {
   return (
     <section className="panel">
-      <h2 className="panel-title">Preview</h2>
-      <div className="mt-4 grid gap-6 xl:grid-cols-2">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h2 className="panel-title">Preview</h2>
+          <p className="mt-1 text-sm leading-6 text-slate-600">
+            Statements use full-width tables with sticky labels and horizontal period scrolling for desktop screen mode.
+          </p>
+        </div>
+      </div>
+      <div className="mt-4 grid gap-5">
         <StatementTable
           title="Balance Sheet"
           periods={statement.periods.map((period) => period.reportingDate)}
@@ -471,17 +486,18 @@ function StatementTable({
   valueKey: "presentationAmount" | "ytdAmount" | "periodActivityAmount";
 }) {
   return (
-    <div className="overflow-hidden rounded-md border border-slate-200 bg-white">
-      <div className="border-b border-slate-200 px-4 py-3">
+    <div className="statement-table-card overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+      <div className="flex flex-col gap-1 border-b border-slate-200 bg-gradient-to-r from-white to-teal-50 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
         <h3 className="text-base font-semibold text-slate-950">{title}</h3>
+        <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">{periods.length} periods</span>
       </div>
-      <div className="overflow-x-auto">
-        <table className="min-w-full text-sm">
-          <thead className="bg-slate-50 text-slate-600">
+      <div className="statement-table-scroll max-h-[520px] overflow-auto">
+        <table className="min-w-[920px] table-fixed text-sm">
+          <thead className="sticky top-0 z-10 bg-slate-100 text-slate-600 shadow-sm">
             <tr>
-              <th className="sticky left-0 bg-slate-50 px-4 py-3 text-left font-semibold">Line</th>
+              <th className="sticky left-0 z-20 w-72 bg-slate-100 px-4 py-3 text-left font-semibold">Line</th>
               {periods.map((period) => (
-                <th className="px-4 py-3 text-right font-semibold" key={period}>
+                <th className="w-32 px-3 py-3 text-right font-semibold" key={period}>
                   {period}
                 </th>
               ))}
@@ -489,15 +505,28 @@ function StatementTable({
           </thead>
           <tbody>
             {lines.map((line) => (
-              <tr className="border-t border-slate-100" key={line.lineId}>
-                <td className="sticky left-0 bg-white px-4 py-3 text-left">
-                  <span className={line.lineType === "header" || line.lineType === "subtotal" ? "font-semibold" : ""}>
+              <tr
+                className={`border-t border-slate-100 ${
+                  line.lineType === "header" || line.lineType === "subtotal" ? "bg-slate-50/80" : "bg-white"
+                }`}
+                key={line.lineId}
+              >
+                <td
+                  className={`sticky left-0 z-10 px-4 py-3 text-left ${
+                    line.lineType === "header" || line.lineType === "subtotal" ? "bg-slate-50" : "bg-white"
+                  }`}
+                >
+                  <span
+                    className={
+                      line.lineType === "header" || line.lineType === "subtotal" ? "font-semibold text-slate-950" : ""
+                    }
+                  >
                     {line.label.en}
                   </span>
-                  <span className="ml-2 text-slate-400">{line.label.zh}</span>
+                  <span className="ml-2 text-xs text-slate-400">{line.label.zh}</span>
                 </td>
                 {periods.map((period) => (
-                  <td className="px-4 py-3 text-right tabular-nums" key={period}>
+                  <td className="px-3 py-3 text-right tabular-nums text-slate-700" key={period}>
                     {formatAmount(line.amountsByPeriod[period]?.[valueKey] ?? 0, amountScale)}
                   </td>
                 ))}
@@ -520,8 +549,15 @@ function ChartPreview({
   plViewMode: PlViewMode;
 }) {
   return (
-    <section className="panel">
-      <h2 className="panel-title">D3 Charts</h2>
+    <section className="chart-section rounded-xl border border-emerald-900/20 bg-[linear-gradient(135deg,#0f2f2b_0%,#123b36_52%,#4a3422_100%)] p-5 shadow-sm">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h2 className="text-lg font-semibold text-white">D3 Charts</h2>
+          <p className="mt-1 text-sm leading-6 text-emerald-50/80">
+            Hover or focus any mark, KPI, or diagnostic tile to inspect the value behind it.
+          </p>
+        </div>
+      </div>
       <div className="mt-4 grid gap-4">
         {chartData.charts.map((chart) => (
           <ChartPanel key={chart.chartId} chart={chart} amountScale={amountScale} plViewMode={plViewMode} />
@@ -551,11 +587,11 @@ function ChartPanel({
   }, [amountScale, chart, plViewMode]);
 
   return (
-    <div className="rounded-md border border-slate-200 bg-slate-50 p-4">
+    <div className="chart-card rounded-lg border border-white/70 bg-white p-4 shadow-sm ring-1 ring-emerald-900/10">
       <h3 className="text-base font-semibold text-slate-950">
         {chart.title.en} <span className="text-slate-400">{chart.title.zh}</span>
       </h3>
-      <div className="mt-3 min-h-80" ref={containerRef} />
+      <div className="mt-3 min-h-80 rounded-md bg-slate-50/70 p-3" ref={containerRef} />
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
 import { buildChartDataModel } from "../src/chart/model";
+import { renderChart } from "../src/chart/renderers";
 import { buildStatementModel } from "../src/domain/statement";
 import { parseCsvWorkbook } from "../src/excel/csvWorkbook";
 import { renderRevealReportHtml } from "../src/reveal/renderRevealReportHtml";
@@ -97,5 +98,21 @@ describe("MVP reporting pipeline", () => {
     expect(html).toContain("renderChart");
     expect(html).toContain("PL_NET_INCOME");
     expect(html).not.toContain("https://");
+  });
+
+  it("renders tooltip targets for every chart type", () => {
+    const parsed = loadFixture("sample-valid");
+    const statement = buildStatementModel(parsed);
+    const chartData = buildChartDataModel(statement, parsed.diagnostics);
+
+    for (const chart of chartData.charts) {
+      const host = document.createElement("div");
+      Object.defineProperty(host, "clientWidth", { configurable: true, value: 720 });
+
+      renderChart(host, chart, { amountScale: "thousand", plViewMode: "ytd" });
+
+      expect(host.querySelector(".chart-tooltip")).toBeTruthy();
+      expect(host.querySelector("[data-tooltip]")).toBeTruthy();
+    }
   });
 });
