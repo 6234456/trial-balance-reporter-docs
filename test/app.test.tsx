@@ -78,6 +78,12 @@ describe("App", () => {
       expect(tableScroll.className).not.toContain("overflow-auto");
       expect(tableScroll.className).not.toContain("max-h");
     }
+    const previewTables = host.querySelectorAll(".statement-table");
+    expect(previewTables).toHaveLength(2);
+    for (const table of previewTables) {
+      expect(table.className).toContain("text-[21px]");
+      expect(table.className).toContain("leading-[1.8]");
+    }
     const infoCode = [...host.querySelectorAll(".diagnostic-code")].find(
       (element) => element.textContent === "INFO_PERIOD_COLUMNS_DETECTED",
     );

@@ -484,12 +484,12 @@ function StatementTable({
         <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">{periods.length} periods</span>
       </div>
       <div className="statement-table-scroll overflow-x-auto">
-        <table className="min-w-[920px] table-fixed text-sm">
+        <table className="statement-table min-w-[1328px] table-fixed text-[21px] leading-[1.8]">
           <thead className="sticky top-0 z-10 bg-slate-100 text-slate-600 shadow-sm">
             <tr>
-              <th className="sticky left-0 z-20 w-72 bg-slate-100 px-4 py-3 text-left font-semibold">Line</th>
+              <th className="sticky left-0 z-20 w-[28rem] bg-slate-100 px-5 py-4 text-left font-semibold">Line</th>
               {periods.map((period) => (
-                <th className="w-32 px-3 py-3 text-right font-semibold" key={period}>
+                <th className="w-44 px-4 py-4 text-right font-semibold" key={period}>
                   {period}
                 </th>
               ))}
@@ -504,7 +504,7 @@ function StatementTable({
                 key={line.lineId}
               >
                 <td
-                  className={`sticky left-0 z-10 px-4 py-3 text-left ${
+                  className={`sticky left-0 z-10 px-5 py-4 text-left ${
                     line.lineType === "header" || line.lineType === "subtotal" ? "bg-slate-50" : "bg-white"
                   }`}
                 >
@@ -515,10 +515,10 @@ function StatementTable({
                   >
                     {line.label.en}
                   </span>
-                  <span className="ml-2 text-xs text-slate-400">{line.label.zh}</span>
+                  <span className="ml-3 text-[18px] text-slate-400">{line.label.zh}</span>
                 </td>
                 {periods.map((period) => (
-                  <td className="px-3 py-3 text-right tabular-nums text-slate-700" key={period}>
+                  <td className="px-4 py-4 text-right tabular-nums text-slate-700" key={period}>
                     {formatAmount(line.amountsByPeriod[period]?.[valueKey] ?? 0, amountScale)}
                   </td>
                 ))}

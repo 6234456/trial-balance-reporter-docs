@@ -72,9 +72,12 @@ export function renderRevealReportHtml(input: RenderInput): string {
     h2 { font-size: clamp(28px, 4vw, 48px); }
     p { margin: 0; color: #475569; font-size: 18px; line-height: 1.7; }
     table { border-collapse: collapse; width: 100%; background: white; border: 1px solid #e2e8f0; }
-    th, td { padding: 9px 10px; border-bottom: 1px solid #e2e8f0; text-align: right; font-size: 13px; }
+    th, td { border-bottom: 1px solid #e2e8f0; text-align: right; }
     th:first-child, td:first-child { text-align: left; }
     .report-table-wrap { max-width: 100%; overflow: hidden; border-radius: 8px; box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06); }
+    .report-table th, .report-table td { padding: 12px 14px; font-size: 19.5px; line-height: 1.8; }
+    .report-table td:first-child { min-width: 420px; }
+    .report-table td span { font-size: 18px; }
     .report-table th { background: #f1f5f9; color: #475569; font-weight: 700; }
     .line-header td, .line-subtotal td { background: #f8fafc; color: #0f172a; font-weight: 700; }
     .chart-frame { min-height: 440px; border: 1px solid #e2e8f0; border-radius: 8px; background: white; padding: 18px; box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06); }

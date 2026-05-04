@@ -117,6 +117,9 @@ describe("MVP reporting pipeline", () => {
     expect(html).toContain("Reveal.initialize");
     expect(html).toContain('data-slide-id="statement-balance-sheet"');
     expect(html).toContain('data-slide-id="statement-profit-or-loss"');
+    expect(html).toContain(".report-table th, .report-table td {");
+    expect(html).toContain("font-size: 19.5px;");
+    expect(html).toContain("line-height: 1.8;");
     for (const chart of chartData.charts) {
       expect(html).toContain(`data-chart-id="${chart.chartId}"`);
     }
