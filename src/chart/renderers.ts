@@ -48,24 +48,57 @@ export function renderChart(container: HTMLElement, chart: ChartSpec, options: C
 
 function renderKpis(container: HTMLElement, chart: ChartSpec, options: ChartRenderOptions, tooltip: HTMLDivElement): void {
   const data = chart.data as Record<string, Record<string, number>>;
-  const latestDate = Object.keys(data).sort().at(-1);
+  const sortedDates = Object.keys(data).sort();
+  const latestDate = sortedDates.at(-1);
+  const previousDate = sortedDates.at(-2);
   const latest: Record<string, number> = latestDate ? (data[latestDate] ?? {}) : {};
+  const previous: Record<string, number> = previousDate ? (data[previousDate] ?? {}) : {};
   const items = [
-    ["Revenue", latest.revenue ?? 0],
-    ["Gross profit", latest.grossProfit ?? 0],
-    ["Net income", latest.netIncome ?? 0],
-    ["Total assets", latest.totalAssets ?? 0],
-    ["Cash", latest.cash ?? 0],
+    { label: "Revenue", key: "revenue", icon: "trend" },
+    { label: "Gross profit", key: "grossProfit", icon: "margin" },
+    { label: "Net income", key: "netIncome", icon: "income" },
+    { label: "Total assets", key: "totalAssets", icon: "assets" },
+    { label: "Cash", key: "cash", icon: "cash" },
   ] as const;
 
   const wrapper = document.createElement("div");
   wrapper.className = "grid gap-3 sm:grid-cols-2 xl:grid-cols-5";
 
-  for (const [label, value] of items) {
+  for (const item of items) {
+    const value = latest[item.key] ?? 0;
+    const previousValue = previous[item.key] ?? 0;
+    const absoluteChange = value - previousValue;
+    const percentChange = previousValue === 0 ? null : absoluteChange / Math.abs(previousValue);
+    const movementTone = absoluteChange >= 0 ? "text-teal-700 bg-teal-50" : "text-rose-700 bg-rose-50";
+    const absoluteChangeText = formatSignedAmount(absoluteChange, options.amountScale);
+    const percentChangeText = formatPercent(percentChange);
     const card = document.createElement("div");
-    card.className = "rounded-md border border-slate-200 bg-white p-4 shadow-sm outline-none focus:ring-2 focus:ring-teal-500";
-    attachTooltip(card, tooltip, `${label}: ${formatAmount(value, options.amountScale)}`);
-    card.innerHTML = `<div class="text-xs font-semibold uppercase tracking-wide text-slate-500">${label}</div><div class="mt-2 text-2xl font-semibold text-slate-950">${formatAmount(value, options.amountScale)}</div>`;
+    card.className =
+      "kpi-card rounded-xl border border-slate-200 bg-white p-4 shadow-md outline-none ring-1 ring-slate-100 transition focus:ring-2 focus:ring-teal-500";
+    card.setAttribute("data-change-absolute", absoluteChangeText);
+    card.setAttribute("data-change-percent", percentChangeText);
+    attachTooltip(
+      card,
+      tooltip,
+      `${item.label}: ${formatAmount(value, options.amountScale)}; vs prior period: ${absoluteChangeText} (${percentChangeText})`,
+    );
+    card.innerHTML = `
+      <div class="flex items-start justify-between gap-3">
+        <div>
+          <div class="text-xs font-semibold uppercase tracking-wide text-slate-500">${item.label}</div>
+          <div class="mt-2 text-2xl font-semibold text-slate-950">${formatAmount(value, options.amountScale)}</div>
+        </div>
+        <div class="kpi-icon flex size-10 shrink-0 items-center justify-center rounded-lg bg-slate-900 text-white shadow-sm" aria-hidden="true">
+          ${renderKpiIcon(item.icon)}
+        </div>
+      </div>
+      <div class="mt-4 rounded-lg px-3 py-2 ${movementTone}">
+        <div class="text-[11px] font-semibold uppercase tracking-wide opacity-75">vs prior period / 较上期</div>
+        <div class="mt-1 flex items-baseline justify-between gap-2">
+          <span class="text-sm font-semibold tabular-nums">${absoluteChangeText}</span>
+          <span class="text-sm font-semibold tabular-nums">${percentChangeText}</span>
+        </div>
+      </div>`;
     wrapper.append(card);
   }
 
@@ -379,8 +412,56 @@ export function formatAmount(value: number, scale: AmountScale): string {
   }).format(value / divisor)}${suffix}`;
 }
 
+function formatSignedAmount(value: number, scale: AmountScale): string {
+  if (value === 0) {
+    return formatAmount(0, scale);
+  }
+
+  return `${value > 0 ? "+" : "-"}${formatAmount(Math.abs(value), scale)}`;
+}
+
+function formatPercent(value: number | null): string {
+  if (value === null || !Number.isFinite(value)) {
+    return "n/a";
+  }
+
+  const formatted = new Intl.NumberFormat("en-US", {
+    maximumFractionDigits: 1,
+    minimumFractionDigits: 1,
+    style: "percent",
+  }).format(Math.abs(value));
+
+  if (value === 0) {
+    return "0.0%";
+  }
+
+  return `${value > 0 ? "+" : "-"}${formatted}`;
+}
+
 function cssClass(value: string): string {
   return value.toLowerCase().replaceAll(/[^a-z0-9]+/g, "-");
+}
+
+function renderKpiIcon(icon: "trend" | "margin" | "income" | "assets" | "cash"): string {
+  const common = `class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"`;
+
+  if (icon === "trend") {
+    return `<svg ${common}><path d="M3 17l6-6 4 4 8-8"></path><path d="M14 7h7v7"></path></svg>`;
+  }
+
+  if (icon === "margin") {
+    return `<svg ${common}><path d="M4 19V5"></path><path d="M4 19h16"></path><path d="M8 15l3-3 3 2 5-7"></path></svg>`;
+  }
+
+  if (icon === "income") {
+    return `<svg ${common}><circle cx="12" cy="12" r="8"></circle><path d="M12 7v10"></path><path d="M9 10c0-1.7 6-1.7 6 0 0 3-6 1-6 4 0 1.7 6 1.7 6 0"></path></svg>`;
+  }
+
+  if (icon === "assets") {
+    return `<svg ${common}><path d="M4 20h16"></path><path d="M6 20V8l6-4 6 4v12"></path><path d="M9 20v-6h6v6"></path></svg>`;
+  }
+
+  return `<svg ${common}><rect x="4" y="7" width="16" height="11" rx="2"></rect><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"></path><path d="M8 12h8"></path></svg>`;
 }
 
 function createTooltip(container: HTMLElement): HTMLDivElement {

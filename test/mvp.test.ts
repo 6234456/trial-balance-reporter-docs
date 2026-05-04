@@ -135,4 +135,31 @@ describe("MVP reporting pipeline", () => {
       expect(host.querySelector("[data-tooltip]")).toBeTruthy();
     }
   });
+
+  it("renders KPI cards with icons and prior-period movement", () => {
+    const parsed = loadFixture("sample-valid");
+    const statement = buildStatementModel(parsed);
+    const chartData = buildChartDataModel(statement, parsed.diagnostics);
+    const chart = chartData.charts.find((item) => item.chartId === "kpi-summary");
+    const host = document.createElement("div");
+
+    if (!chart) {
+      throw new Error("kpi-summary chart not found");
+    }
+
+    renderChart(host, chart, { amountScale: "thousand", plViewMode: "ytd" });
+
+    const cards = host.querySelectorAll(".kpi-card");
+    expect(cards).toHaveLength(5);
+    expect(host.querySelectorAll(".kpi-icon")).toHaveLength(5);
+    expect(host.textContent).toContain("vs prior period / 较上期");
+
+    const revenueCard = cards[0];
+    expect(revenueCard?.className).toContain("rounded-xl");
+    expect(revenueCard?.className).toContain("shadow-md");
+    expect(revenueCard?.getAttribute("data-change-absolute")).toBe("+1,150k");
+    expect(revenueCard?.getAttribute("data-change-percent")).toBe("+39.0%");
+    expect(revenueCard?.textContent).toContain("+1,150k");
+    expect(revenueCard?.textContent).toContain("+39.0%");
+  });
 });
