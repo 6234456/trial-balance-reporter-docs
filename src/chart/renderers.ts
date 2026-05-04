@@ -282,6 +282,7 @@ function renderPairedStackedBars(
   });
 
   drawAxes(svg, x, y, width, height, margin, options.amountScale);
+  svg.select(".y-axis").selectAll(".tick text").remove();
 
   const groupLayer = svg.append("g");
 
@@ -319,23 +320,23 @@ function renderPairedStackedBars(
 
     if (largestSegment && largestSegment.amount > 0) {
       const horizontalBias = groupIndex === 0 ? "left" : "right";
-      const labelXOffset = x.bandwidth() * (horizontalBias === "left" ? -0.14 : 0.14);
+      const labelGap = 12;
+      const labelX = horizontalBias === "left" ? xPosition - labelGap : xPosition + x.bandwidth() + labelGap;
 
       svg
         .append("text")
         .attr("class", "paired-largest-segment-label")
         .attr("data-group", group.group)
         .attr("data-horizontal-bias", horizontalBias)
-        .attr("x", xPosition + x.bandwidth() / 2 + labelXOffset)
+        .attr("data-bar-left", xPosition)
+        .attr("data-bar-right", xPosition + x.bandwidth())
+        .attr("x", labelX)
         .attr("y", y((largestSegment.start + largestSegment.end) / 2))
-        .attr("text-anchor", "middle")
+        .attr("text-anchor", horizontalBias === "left" ? "end" : "start")
         .attr("dominant-baseline", "middle")
         .attr("font-size", 11)
         .attr("font-weight", 700)
-        .attr("fill", "#ffffff")
-        .attr("stroke", "#0f172a")
-        .attr("stroke-width", 2.5)
-        .attr("paint-order", "stroke")
+        .attr("fill", "#0f172a")
         .attr("pointer-events", "none")
         .text(largestSegment.label);
     }

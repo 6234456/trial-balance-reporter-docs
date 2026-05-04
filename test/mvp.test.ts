@@ -165,7 +165,7 @@ describe("MVP reporting pipeline", () => {
     expect(mergedTooltips[0]?.getAttribute("data-tooltip")).toContain("Net Income");
   });
 
-  it("renders balance composition with left ticks and labels on each largest segment", () => {
+  it("renders balance composition without left values and with outside segment labels", () => {
     const parsed = loadFixture("sample-valid");
     const statement = buildStatementModel(parsed);
     const chartData = buildChartDataModel(statement, parsed.diagnostics);
@@ -186,14 +186,16 @@ describe("MVP reporting pipeline", () => {
 
     expect(yAxis).toBeTruthy();
     expect(yAxis?.getAttribute("transform")).toBe("translate(72,0)");
-    expect(yAxis?.querySelectorAll(".tick text").length).toBeGreaterThan(0);
+    expect(yAxis?.querySelectorAll(".tick text").length).toBe(0);
     expect(labels).toHaveLength(2);
     expect(assetsLabel?.textContent).toContain("Property, plant and equipment");
     expect(assetsLabel?.getAttribute("data-horizontal-bias")).toBe("left");
     expect(liabilitiesLabel?.textContent).toContain("Retained earnings");
     expect(liabilitiesLabel?.getAttribute("data-horizontal-bias")).toBe("right");
-    expect(assetsLabel?.getAttribute("text-anchor")).toBe("middle");
-    expect(liabilitiesLabel?.getAttribute("text-anchor")).toBe("middle");
+    expect(assetsLabel?.getAttribute("text-anchor")).toBe("end");
+    expect(liabilitiesLabel?.getAttribute("text-anchor")).toBe("start");
+    expect(Number(assetsLabel?.getAttribute("x"))).toBeLessThan(Number(assetsLabel?.getAttribute("data-bar-left")));
+    expect(Number(liabilitiesLabel?.getAttribute("x"))).toBeGreaterThan(Number(liabilitiesLabel?.getAttribute("data-bar-right")));
     expect(Number(assetsLabel?.getAttribute("x"))).toBeLessThan(Number(liabilitiesLabel?.getAttribute("x")));
   });
 
