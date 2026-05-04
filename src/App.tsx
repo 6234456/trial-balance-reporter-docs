@@ -381,7 +381,7 @@ function DiagnosticsPanel({ diagnostics }: { diagnostics: DiagnosticReport }) {
     <section className="panel">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h2 className="panel-title">Validate</h2>
-        <div className="grid grid-cols-3 gap-2 text-center text-sm">
+        <div className="grid min-w-0 grid-cols-3 gap-2 text-center text-sm">
           <Metric label="Blocking" value={diagnostics.summary.blocking} tone="text-red-700" />
           <Metric label="Warnings" value={diagnostics.summary.warning} tone="text-slate-700" />
           <Metric label="Info" value={diagnostics.summary.info} tone="text-slate-700" />
@@ -398,8 +398,8 @@ function DiagnosticsPanel({ diagnostics }: { diagnostics: DiagnosticReport }) {
 
 function Metric({ label, value, tone }: { label: string; value: number; tone: string }) {
   return (
-    <div className="rounded-md border border-slate-200 bg-white px-3 py-2">
-      <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">{label}</div>
+    <div className="min-w-0 overflow-hidden rounded-md border border-slate-200 bg-white px-3 py-2">
+      <div className="truncate text-xs font-semibold uppercase tracking-wide text-slate-500">{label}</div>
       <div className={`text-xl font-semibold ${tone}`}>{value}</div>
     </div>
   );
@@ -407,16 +407,16 @@ function Metric({ label, value, tone }: { label: string; value: number; tone: st
 
 function DiagnosticGroup({ severity, items }: { severity: DiagnosticSeverity; items: Diagnostic[] }) {
   return (
-    <div className="rounded-md border border-slate-200 bg-slate-50 p-3">
+    <div className="diagnostic-group min-w-0 overflow-hidden rounded-md border border-slate-200 bg-slate-50 p-3">
       <h3 className="text-sm font-semibold capitalize text-slate-950">{severity}</h3>
       {items.length === 0 ? (
         <p className="mt-3 text-sm text-slate-500">No items.</p>
       ) : (
-        <ul className="mt-3 space-y-2">
+        <ul className="mt-3 min-w-0 space-y-2">
           {items.map((item, index) => (
-            <li className="rounded-md bg-white p-3 text-sm shadow-sm" key={`${item.code}-${index}`}>
-              <div className="font-semibold text-slate-800">{item.code}</div>
-              <div className="mt-1 leading-5 text-slate-600">{item.message}</div>
+            <li className="min-w-0 rounded-md bg-white p-3 text-sm shadow-sm" key={`${item.code}-${index}`}>
+              <div className="diagnostic-code break-words font-semibold text-slate-800">{item.code}</div>
+              <div className="mt-1 break-words leading-5 text-slate-600">{item.message}</div>
             </li>
           ))}
         </ul>

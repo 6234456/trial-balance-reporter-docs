@@ -78,6 +78,18 @@ describe("App", () => {
       expect(tableScroll.className).not.toContain("overflow-auto");
       expect(tableScroll.className).not.toContain("max-h");
     }
+    const infoCode = [...host.querySelectorAll(".diagnostic-code")].find(
+      (element) => element.textContent === "INFO_PERIOD_COLUMNS_DETECTED",
+    );
+    expect(infoCode).toBeTruthy();
+
+    if (!infoCode) {
+      throw new Error("Info diagnostic code not found");
+    }
+
+    expect(infoCode.className).toContain("break-words");
+    expect(infoCode.parentElement?.className).toContain("min-w-0");
+    expect(infoCode.closest(".diagnostic-group")?.className).toContain("min-w-0");
     const chartSection = host.querySelector(".chart-section");
     expect(chartSection).toBeTruthy();
     expect(chartSection?.className).not.toContain("bg-");
